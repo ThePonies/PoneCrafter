@@ -5,28 +5,18 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.stage.FileChooser;
 import org.theponies.ponecrafter.SceneName;
+import org.theponies.ponecrafter.exceptions.SavePackageException;
 import org.theponies.ponecrafter.model.JsonModel;
+import org.theponies.ponecrafter.model.SavePackage;
 import org.theponies.ponecrafter.util.Alerts;
 import org.theponies.ponecrafter.util.StringUtils;
 
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.net.URI;
-import java.nio.charset.Charset;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.FileSystem;
-import java.nio.file.FileSystems;
-import java.nio.file.Files;
-import java.nio.file.StandardOpenOption;
-import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import java.util.zip.ZipEntry;
-import java.util.zip.ZipOutputStream;
 
 public abstract class EditController extends BaseController {
     private static final Logger logger = Logger.getLogger(EditController.class.getName());
@@ -44,38 +34,36 @@ public abstract class EditController extends BaseController {
     }
 
     public void onSaveButton (ActionEvent actionEvent) {
-        //TODO: Replace with ZIP file logic (probably in implementation class)
         if (!validateInput()) {
             return;
         }
-        FileChooser fileChooser = new FileChooser();
-        fileChooser.setTitle("Save " + modelName);
-        File file = fileChooser.showOpenDialog(getStage());
+        String saveName = getInitialSaveName();
+        if (saveName == null || saveName.isEmpty()) {
+            saveName = "untitled";
+        }
+        File file = saveFileDialog(saveName);
         if (file != null) {
-            byte[] bytes = createModelFromInput().toJson().getBytes(StandardCharsets.UTF_8);
+            if (file.exists() && !Alerts.showConfirmation("File already exists.",
+                    "Are you sure you want to overwrite " + file.getName() + "?")) {
+                return;
+            }
             try {
-                if (!Files.exists(file.toPath()) || Alerts.showConfirmation("Overwrite file?", "Are you sure you want to overwrite " + file.getName() + "?")) {
-                    Files.write(file.toPath(), bytes, StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING);
-                    Alerts.showInfo(StringUtils.capitalizeFirst(modelName + " saved"),
-                            StringUtils.capitalizeFirst(modelName + " " + file.getName() + " was saved successfully."));
-                }
+                SavePackage savePackage = createSavePackage();
+                savePackage.saveToZip(file.getPath());
+                Alerts.showInfo("Success!", StringUtils.capitalizeFirst(modelName) + " " + file.getName() + " saved successfully.");
+            } catch (SavePackageException e) {
+                logger.log(Level.WARNING, "Failed to create save package.", e);
+                Alerts.showError("Couldn't create save package.", e.getMessage());
             } catch (IOException e) {
-                logger.log(Level.WARNING, "Unable to save file.", e);
-                Alerts.showError("Can't save file", "Unable to save " + modelName + ": " + e.getMessage());
+                logger.log(Level.WARNING, "Failed to save package.", e);
+                Alerts.showError("Couldn't save package.", e.getMessage());
             }
         }
     }
 
-    public void saveToZip (String path, Map<String, byte[]> fileMap) throws IOException {
-        File file = new File(path);
-        ZipOutputStream out = new ZipOutputStream(new FileOutputStream(file));
-        for (String filename : fileMap.keySet()) {
-            out.putNextEntry(new ZipEntry(filename));
-            out.write(fileMap.get(filename));
-            out.closeEntry();
-        }
-        out.close();
-    }
+    public abstract SavePackage createSavePackage () throws SavePackageException;
+
+    public abstract String getInitialSaveName ();
 
     protected File loadImageDialog () {
         return loadFileDialog("Image", new String[]{"png", "jpg", "gif"});
@@ -85,6 +73,13 @@ public abstract class EditController extends BaseController {
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Load " + typeName);
         fileChooser.setSelectedExtensionFilter(new FileChooser.ExtensionFilter(typeName, extensions));
+        return fileChooser.showOpenDialog(getStage());
+    }
+
+    protected File saveFileDialog (String name) {
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Save " + modelName);
+        fileChooser.setInitialFileName(name + ".pcc");
         return fileChooser.showOpenDialog(getStage());
     }
 

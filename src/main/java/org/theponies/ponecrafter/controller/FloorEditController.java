@@ -6,14 +6,13 @@ import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import org.theponies.ponecrafter.AppConstants;
+import org.theponies.ponecrafter.exceptions.SavePackageException;
 import org.theponies.ponecrafter.model.Floor;
 import org.theponies.ponecrafter.model.JsonModel;
-import org.theponies.ponecrafter.util.Alerts;
+import org.theponies.ponecrafter.model.SavePackage;
 
-import java.io.File;
-import java.io.UnsupportedEncodingException;
-import java.util.HashMap;
-import java.util.Map;
+import java.io.*;
 import java.util.logging.Logger;
 
 
@@ -67,4 +66,19 @@ public class FloorEditController extends EditController {
             floorImageView.setImage(image);
         }
     }
+
+    @Override
+    public SavePackage createSavePackage () throws SavePackageException {
+        SavePackage savePackage = new SavePackage();
+        savePackage.addFile("properties.json", createModelFromInput().toJson().getBytes(AppConstants.DEFAULT_CHARSET));
+        savePackage.addImage("texture.png", floorImageView.getImage());
+        return savePackage;
+    }
+
+    @Override
+    public String getInitialSaveName () {
+        return nameInput.getText();
+    }
+
+
 }
