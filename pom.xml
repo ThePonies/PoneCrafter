@@ -37,7 +37,7 @@
                         </manifest>
                     </archive>
                     <descriptorRefs>
-                        <descriptorRef>full</descriptorRef>
+                        <descriptorRef>jar-with-dependencie</descriptorRef>
                     </descriptorRefs>
                 </configuration>
             </plugin>
