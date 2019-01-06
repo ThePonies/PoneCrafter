@@ -1,12 +1,20 @@
 package org.theponies.ponecrafter.controller
 
+import javafx.embed.swing.SwingFXUtils
 import javafx.scene.control.Alert
+import javafx.scene.image.Image
 import javafx.stage.FileChooser
 import org.theponies.ponecrafter.model.Floor
 import tornadofx.Controller
 import tornadofx.alert
 import tornadofx.chooseFile
-import java.io.File
+import java.io.*
+import java.util.zip.ZipOutputStream
+import java.util.zip.ZipEntry
+import java.io.BufferedOutputStream
+import java.io.FileOutputStream
+import javax.imageio.ImageIO
+
 
 class FloorEditorController : Controller() {
 
@@ -28,6 +36,23 @@ class FloorEditorController : Controller() {
     }
 
     private fun save(model: Floor, file: File) {
+        val fos = FileOutputStream(file)
+        val bos = BufferedOutputStream(fos)
+        val zos = ZipOutputStream(bos)
+        zos.use { zip ->
+            zip.putNextEntry(ZipEntry("properties.json"))
+            zip.write(model.toJSON().toString().toByteArray())
+            zip.putNextEntry(ZipEntry("texture.png"))
+            zip.write(getImageBytes(model.image))
+            zip.closeEntry()
+        }
+    }
 
+    private fun getImageBytes(image: Image): ByteArray {
+        val bufferedImage = SwingFXUtils.fromFXImage(image, null)
+        ByteArrayOutputStream().use { output ->
+            ImageIO.write(bufferedImage, "png", output)
+            return output.toByteArray()
+        }
     }
 }
