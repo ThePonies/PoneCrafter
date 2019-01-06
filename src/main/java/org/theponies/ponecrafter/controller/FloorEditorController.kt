@@ -6,6 +6,7 @@ import javafx.scene.image.Image
 import javafx.stage.FileChooser
 import org.theponies.ponecrafter.model.Floor
 import tornadofx.Controller
+import tornadofx.FileChooserMode
 import tornadofx.alert
 import tornadofx.chooseFile
 import java.io.*
@@ -15,15 +16,17 @@ import java.io.BufferedOutputStream
 import java.io.FileOutputStream
 import javax.imageio.ImageIO
 
-
 class FloorEditorController : Controller() {
 
     fun saveDialog(model: Floor) {
         val file = chooseFile(
             "Save floor...",
-            arrayOf(FileChooser.ExtensionFilter("PoneCrafter Content", "*.pcc"))
+            arrayOf(FileChooser.ExtensionFilter("PoneCrafter Content", "*.pcc")),
+            FileChooserMode.Save
         ) {
-            initialFileName = "${model.name}.pcc"
+            val regex = Regex("[^A-Za-z0-9 ]")
+            val name = regex.replace(model.name, "").replace(" ", "-")
+            initialFileName = "${name}.pcc"
         }.firstOrNull()
         if (file != null) {
             save(model, file)
