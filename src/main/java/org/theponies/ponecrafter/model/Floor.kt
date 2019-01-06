@@ -1,37 +1,21 @@
 package org.theponies.ponecrafter.model
 
-import org.json.JSONException
-import org.json.JSONObject
+import javafx.beans.property.SimpleIntegerProperty
+import javafx.beans.property.SimpleObjectProperty
+import javafx.beans.property.SimpleStringProperty
+import javafx.scene.image.Image
+import tornadofx.*
 
-import java.util.UUID
+class Floor(name: String = "", description: String = "", price: Int = 0) {
+    val nameProperty = SimpleStringProperty(this, "name", name)
+    var name by nameProperty
 
-class Floor(private val uuid: UUID, val name: String, val description: String, val price: Int) : JsonModel {
+    val descriptionProperty = SimpleStringProperty(this, "description", description)
+    var description by descriptionProperty
 
-    @Throws(JSONException::class)
-    constructor(jsonObject: JSONObject) : this(
-        UUID.fromString(jsonObject.getString(GUID)),
-        jsonObject.getString(NAME),
-        jsonObject.getString(DESCRIPTION),
-        jsonObject.getInt(PRICE)
-    ) {
-    }
+    val priceProperty = SimpleIntegerProperty(this, "price", price)
+    var price by priceProperty
 
-    constructor(json: String) : this(JSONObject(json)) {}
-
-    override fun toJsonObject(): JSONObject {
-        val jsonObject = JSONObject()
-        jsonObject.put(GUID, uuid)
-        jsonObject.put(NAME, name)
-        jsonObject.put(DESCRIPTION, description)
-        jsonObject.put(PRICE, price)
-        return jsonObject
-    }
-
-    companion object {
-        val TEXTURE_SIZE = 128
-        private val GUID = "guid"
-        private val NAME = "name"
-        private val DESCRIPTION = "description"
-        private val PRICE = "price"
-    }
+    val imageProperty = SimpleObjectProperty<Image>(this, "image", null)
+    var image by imageProperty
 }

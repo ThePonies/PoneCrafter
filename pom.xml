@@ -89,6 +89,10 @@
             <version>${kotlin.version}</version>
             <scope>test</scope>
         </dependency>
+        <dependency>
+            <groupId>no.tornado</groupId>
+            <artifactId>tornadofx</artifactId>
+            <version>1.7.18</version>
+        </dependency>
     </dependencies>
-
 </project>
