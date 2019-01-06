@@ -6,6 +6,7 @@ import javafx.stage.FileChooser
 import org.theponies.ponecrafter.controller.FloorEditorController
 import org.theponies.ponecrafter.model.FloorModel
 import org.theponies.ponecrafter.util.IntStringConverter
+import org.theponies.ponecrafter.util.UuidUtil
 import tornadofx.*
 import java.io.File
 
@@ -14,8 +15,8 @@ class FloorEditorView : View("Floor Editor") {
     private val model: FloorModel = FloorModel()
 
     override val root = form {
-        prefWidth = 640.0
-        prefHeight = 480.0
+        prefWidth = 800.0
+        prefHeight = 600.0
         fieldset("Edit floor") {
             field("Name") {
                 textfield(model.name).validator {
@@ -41,12 +42,13 @@ class FloorEditorView : View("Floor Editor") {
         }
         button("Generate UUID") {
             action {
-                controller.regenerateUuid()
+                model.uuid.value = UuidUtil.generateContentUuid()
             }
         }
+        label(model.uuid)
         button("Load Image") {
             action {
-                val imageFile : File? = chooseFile(
+                val imageFile: File? = chooseFile(
                     "Select floor texture...",
                     arrayOf(FileChooser.ExtensionFilter("Image (png, jpeg, gif)", "*.png", "*.jpg", "*.jpeg", "*.gif"))
                 ).firstOrNull()
@@ -73,7 +75,7 @@ class FloorEditorView : View("Floor Editor") {
             enableWhen(model.valid)
             action {
                 if (model.commit()) {
-                    controller.save(model)
+                    controller.saveDialog(model.item)
                 }
             }
         }
