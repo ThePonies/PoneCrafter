@@ -1,7 +1,10 @@
 package org.theponies.ponecrafter.view
 
+import javafx.event.EventHandler
 import javafx.geometry.Pos
+import javafx.scene.Parent
 import javafx.scene.image.Image
+import org.theponies.ponecrafter.Icons
 import org.theponies.ponecrafter.Styles
 import tornadofx.*
 
@@ -30,27 +33,31 @@ class MenuView : View("PoneCrafter Menu") {
         }
         hbox(30) {
             padding = insets(40, 10)
-            button("Wall Texture") {
-                prefWidth = 120.0
+            mainMenuButtonBox(this, "Wall Texture", Icons.wallpaper)
+            mainMenuButtonBox(this, "Floor Texture", Icons.floor) {
+                replaceWith<FloorEditorView>(sizeToScene = true)
             }
-            button("Floor Texture") {
-                prefWidth = 120.0
-                action { replaceWith<FloorEditorView>(sizeToScene = true) }
-            }
-            button("Roof Texture") {
-                prefWidth = 120.0
-            }
-            button("Terrain Texture") {
-                prefWidth = 120.0
-            }
-            button("Object") {
-                prefWidth = 120.0
-            }
+            mainMenuButtonBox(this, "Roof Texture", Icons.roof)
+            mainMenuButtonBox(this, "Terrain Texture", Icons.terrain)
+            mainMenuButtonBox(this, "Object", Icons.objects)
         }
         hbox(0, Pos.CENTER) {
             padding = insets(80)
             label("More text may or may not be added here") {
                 addClass(Styles.subtleText)
+            }
+        }
+    }
+
+    private fun mainMenuButtonBox(parent: Parent, name: String, icon: String, action: () -> Unit = {}) = with(parent) {
+        vbox {
+            addClass(Styles.mainMenuButton)
+            prefWidth = 120.0
+            alignment = Pos.CENTER
+            svgpath(icon)
+            label(name)
+            onMouseClicked = EventHandler {
+                action()
             }
         }
     }
