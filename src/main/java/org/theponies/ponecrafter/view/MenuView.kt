@@ -54,7 +54,10 @@ class MenuView : View("PoneCrafter Menu") {
             addClass(Styles.mainMenuButton)
             prefWidth = 120.0
             alignment = Pos.CENTER
-            svgpath(icon)
+            hbox(0, Pos.CENTER) {
+                svgpath(icon)
+                prefHeight = 80.0
+            }
             label(name)
             onMouseClicked = EventHandler {
                 action()
