@@ -1,5 +1,6 @@
 package org.theponies.ponecrafter
 
+import javafx.scene.Scene
 import javafx.stage.Stage
 import org.theponies.ponecrafter.view.MenuView
 import tornadofx.*
@@ -9,4 +10,6 @@ class PoneCrafterApp : App(MenuView::class, Styles::class) {
         stage.isResizable = false
         super.start(stage)
     }
+
+    override fun createPrimaryScene(view: UIComponent) = Scene(view.root, 800.0, 600.0)
 }

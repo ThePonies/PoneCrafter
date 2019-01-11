@@ -10,8 +10,6 @@ import tornadofx.*
 
 class MenuView : View("PoneCrafter Menu") {
     override val root = vbox {
-        prefWidth = 800.0
-        prefHeight = 600.0
         hbox {
             padding = insets(80, 100, 0, 100)
             imageview(Image("images/PoneCrafter.png"))
@@ -35,7 +33,7 @@ class MenuView : View("PoneCrafter Menu") {
             padding = insets(40, 10)
             mainMenuButtonBox(this, "Wall Texture", Icons.wallpaper)
             mainMenuButtonBox(this, "Floor Texture", Icons.floor) {
-                replaceWith<FloorEditorView>(sizeToScene = true)
+                replaceWith<FloorEditorView>()
             }
             mainMenuButtonBox(this, "Roof Texture", Icons.roof)
             mainMenuButtonBox(this, "Terrain Texture", Icons.terrain)
@@ -50,7 +48,7 @@ class MenuView : View("PoneCrafter Menu") {
     }
 
     private fun mainMenuButtonBox(parent: Parent, name: String, icon: String, action: () -> Unit = {}) = with(parent) {
-        vbox {
+        vbox(10) {
             addClass(Styles.mainMenuButton)
             prefWidth = 120.0
             alignment = Pos.CENTER

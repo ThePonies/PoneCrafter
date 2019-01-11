@@ -68,7 +68,7 @@ class FloorEditorView : View("Floor Editor") {
         }
         button("Back") {
             action {
-                replaceWith<MenuView>(sizeToScene = true)
+                replaceWith<MenuView>()
             }
         }
         button("Save") {
