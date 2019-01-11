@@ -1,9 +1,7 @@
 package org.theponies.ponecrafter.view
 
 import javafx.geometry.Pos
-import javafx.scene.control.Alert
-import javafx.scene.image.Image
-import javafx.stage.FileChooser
+import javafx.scene.layout.Priority
 import org.theponies.ponecrafter.Icons
 import org.theponies.ponecrafter.Styles
 import org.theponies.ponecrafter.controller.FloorEditorController
@@ -11,9 +9,8 @@ import org.theponies.ponecrafter.model.FloorModel
 import org.theponies.ponecrafter.util.IntStringConverter
 import org.theponies.ponecrafter.util.UuidUtil
 import tornadofx.*
-import java.io.File
 
-class FloorEditorView : View("Floor Editor") {
+class FloorEditorView : View("Create a Floor") {
     private val controller: FloorEditorController by inject()
     private val model: FloorModel = FloorModel()
 
@@ -50,47 +47,59 @@ class FloorEditorView : View("Floor Editor") {
                 }
             }
         }
-        imageview(model.image) {
-            model.addValidator(this, model.image) {
-                if (model.image.value != null) success() else error()
-            }
-        }
-        button("Generate UUID") {
-            action {
-                model.uuid.value = UuidUtil.generateContentUuid()
-            }
-        }
-        label(model.uuid)
-        button("Load Image") {
-            action {
-                val imageFile: File? = chooseFile(
-                    "Select floor texture...",
-                    arrayOf(FileChooser.ExtensionFilter("Image (png, jpeg, gif)", "*.png", "*.jpg", "*.jpeg", "*.gif"))
-                ).firstOrNull()
-                if (imageFile != null) {
-                    val image = Image(imageFile.toURI().toString(), 128.0, 128.0, false, true)
-                    if (image.isError) {
-                        alert(
-                            Alert.AlertType.ERROR,
-                            "Can't load image",
-                            "The image could not be loaded."
-                        )
-                    } else {
-                        model.image.value = image
+        hbox {
+            vgrow = Priority.ALWAYS
+            alignment = Pos.CENTER
+            vbox(10) {
+                padding = insets(20, 30)
+                alignment = Pos.BOTTOM_LEFT
+                button("Back") {
+                    action {
+                        replaceWith<MenuView>()
+                    }
+                }
+                button("Save") {
+                    enableWhen(model.valid)
+                    action {
+                        if (model.commit()) {
+                            controller.saveDialog(model.item)
+                        }
                     }
                 }
             }
-        }
-        button("Back") {
-            action {
-                replaceWith<MenuView>()
+            hbox {
+                padding = insets(0, 42)
+                hgrow = Priority.ALWAYS
+                alignment = Pos.TOP_RIGHT
+                label(model.uuid) {
+                    style {
+                        fontSize = 12.px
+                    }
+                }
             }
-        }
-        button("Save") {
-            enableWhen(model.valid)
-            action {
-                if (model.commit()) {
-                    controller.saveDialog(model.item)
+            vbox(10) {
+                padding = insets(20, 30)
+                alignment = Pos.BOTTOM_RIGHT
+                button("Generate UUID") {
+                    prefWidth = 160.0
+                    action {
+                        model.uuid.value = UuidUtil.generateContentUuid()
+                    }
+                }
+                button("Load Image") {
+                    prefWidth = 160.0
+                    action {
+                        controller.chooseTextureDialog().let { model.image.value = it }
+                    }
+                }
+            }
+            vbox {
+                imageview(model.image) {
+                    prefWidth = 128.0
+                    prefHeight = 128.0
+                    model.addValidator(this, model.image) {
+                        if (model.image.value != null) success() else error()
+                    }
                 }
             }
         }

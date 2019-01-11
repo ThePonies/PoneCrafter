@@ -18,6 +18,26 @@ import javax.imageio.ImageIO
 
 class FloorEditorController : Controller() {
 
+    fun chooseTextureDialog(): Image? {
+        val imageFile: File? = chooseFile(
+            "Select floor texture...",
+            arrayOf(FileChooser.ExtensionFilter("Image (png, jpeg, gif)", "*.png", "*.jpg", "*.jpeg", "*.gif"))
+        ).firstOrNull()
+        if (imageFile != null) {
+            val image = Image(imageFile.toURI().toString(), 128.0, 128.0, false, true)
+            if (image.isError) {
+                alert(
+                    Alert.AlertType.ERROR,
+                    "Can't load image",
+                    "The image could not be loaded."
+                )
+            } else {
+                return image
+            }
+        }
+        return null;
+    }
+
     fun saveDialog(model: Floor) {
         val file = chooseFile(
             "Save floor...",

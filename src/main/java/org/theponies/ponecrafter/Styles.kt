@@ -34,6 +34,7 @@ class Styles : Stylesheet() {
             backgroundColor += buttonColor
             borderRadius += box(20.px)
             backgroundRadius += box(20.px)
+            padding = box(10.px, 20.px)
         }
         label {
             +standardText
