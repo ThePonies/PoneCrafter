@@ -1,8 +1,11 @@
 package org.theponies.ponecrafter.view
 
+import javafx.geometry.Pos
 import javafx.scene.control.Alert
 import javafx.scene.image.Image
 import javafx.stage.FileChooser
+import org.theponies.ponecrafter.Icons
+import org.theponies.ponecrafter.Styles
 import org.theponies.ponecrafter.controller.FloorEditorController
 import org.theponies.ponecrafter.model.FloorModel
 import org.theponies.ponecrafter.util.IntStringConverter
@@ -15,13 +18,23 @@ class FloorEditorView : View("Floor Editor") {
     private val model: FloorModel = FloorModel()
 
     override val root = form {
-        prefWidth = 800.0
-        prefHeight = 600.0
-        fieldset("Edit floor") {
+        padding = insets(20)
+        fieldset {
+            hbox {
+                svgpath(Icons.floor) {
+                    fill = Styles.textColor
+                }
+                label("Create a Floor") {
+                    addClass(Styles.windowTitle)
+                    padding = insets(15, 0)
+                }
+                prefHeight = 80.0
+            }
             field("Name") {
                 textfield(model.name).validator {
                     if (it.isNullOrBlank()) error("The name field is required") else null
                 }
+                labelContainer.alignment = Pos.TOP_LEFT
             }
             field("Price") {
                 textfield(model.price, IntStringConverter()) {
@@ -32,7 +45,9 @@ class FloorEditorView : View("Floor Editor") {
                 }
             }
             field("Description") {
-                textarea(model.description)
+                textarea(model.description) {
+                    prefHeight = 240.0
+                }
             }
         }
         imageview(model.image) {

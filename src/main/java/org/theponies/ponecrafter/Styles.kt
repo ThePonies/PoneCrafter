@@ -8,6 +8,7 @@ class Styles : Stylesheet() {
         val subtleText by cssclass()
         val mainMenuButton by cssclass()
         val svgPath by csselement("SVGPath")
+        val windowTitle by cssclass()
 
         val background = c("#01478D")
         val textFieldColor = c("#092E87")
@@ -31,6 +32,8 @@ class Styles : Stylesheet() {
         button {
             +standardText
             backgroundColor += buttonColor
+            borderRadius += box(20.px)
+            backgroundRadius += box(20.px)
         }
         label {
             +standardText
@@ -39,14 +42,22 @@ class Styles : Stylesheet() {
             +standardText
             backgroundColor += textFieldColor
             borderColor += box(textFieldBorder)
+            borderRadius += box(20.px)
+            backgroundRadius += box(20.px)
         }
         textArea {
             +standardText
             backgroundColor += textFieldColor
-            focusColor = Color.TRANSPARENT
-            textBoxBorder = textFieldBorder
-            content {
-                backgroundColor += textFieldColor
+            borderRadius += box(20.px)
+            backgroundRadius += box(20.px)
+            scrollPane {
+                backgroundColor += Color.TRANSPARENT
+                viewport {
+                    backgroundColor += Color.TRANSPARENT
+                }
+                content {
+                    backgroundColor += Color.TRANSPARENT
+                }
             }
         }
         subtleText {
@@ -74,6 +85,9 @@ class Styles : Stylesheet() {
                     fill = clickablePressedColor
                 }
             }
+        }
+        windowTitle {
+            fontSize = 22.px
         }
     }
 }

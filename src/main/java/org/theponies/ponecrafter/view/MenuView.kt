@@ -16,17 +16,13 @@ class MenuView : View("PoneCrafter Menu") {
         }
         hbox(0, Pos.CENTER) {
             padding = insets(20)
-            style {
-                fontSize = 18.pt
-            }
+            addClass(Styles.windowTitle)
             label("Custom Content Tool for The Ponies")
         }
         hbox {
             padding = insets(40, 20)
             label("Create a...") {
-                style {
-                    fontSize = 18.pt
-                }
+                addClass(Styles.windowTitle)
             }
         }
         hbox(30) {
