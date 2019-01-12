@@ -19,7 +19,7 @@ pipeline {
     }
     post {
         success {
-            slackSend color: 'good', message: "Build #${env.BUILD_NUMBER} for branch ${env.BRANCH_NAME} completed successfully: ${absoluteUrl}"
+            slackSend color: 'good', message: "Build #${env.BUILD_NUMBER} for branch ${env.BRANCH_NAME} completed successfully."
         }
         unstable {
             slackSend color: 'warning', message: "Build #${env.BUILD_NUMBER} for branch ${env.BRANCH_NAME} completed, but is unstable."
