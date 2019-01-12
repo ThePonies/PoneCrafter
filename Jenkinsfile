@@ -11,10 +11,19 @@ pipeline {
                 archiveArtifacts(artifacts: 'target/PoneCrafter-1.0-SNAPSHOT-jar-with-dependencies.jar', onlyIfSuccessful: true, fingerprint: true)
             }
         }
-        stage('Notify') {
-            steps {
-                slackSend color: 'good', message: 'Building PoneCrafter branch ${branch} complete.'
-            }
+    }
+    post {
+        success {
+            slackSend color: 'good', message: 'Build ${env.BUILD_NUMBER} for branch ${env.BRANCH_NAME} completed successfully.'
+        }
+        unstable {
+            slackSend color: 'warning', message: 'Build ${env.BUILD_NUMBER} for branch ${env.BRANCH_NAME} completed, but is unstable.'
+        }
+        unsuccessful {
+            slackSend color: 'danger', message: 'Build ${env.BUILD_NUMBER} for branch ${env.BRANCH_NAME} failed.'
+        }
+        aborted {
+            slackSend color: '#888888', message: 'Build ${env.BUILD_NUMBER} for branch ${env.BRANCH_NAME} aborted.'
         }
     }
 }
