@@ -18,7 +18,7 @@ import javax.imageio.ImageIO
 
 class FloorEditorController : Controller() {
 
-    fun chofoseTextureDialog(): Image? {
+    fun chooseTextureDialog(): Image? {
         val imageFile: File? = chooseFile(
             "Select floor texture...",
             arrayOf(FileChooser.ExtensionFilter("Image (png, jpeg, gif)", "*.png", "*.jpg", "*.jpeg", "*.gif"))
