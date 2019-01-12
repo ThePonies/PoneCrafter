@@ -1,14 +1,14 @@
 pipeline {
     agent any
     stages {
-        stage('Stage 1') {
+        stage ('Build') {
             steps {
-                echo 'Hello Fluttershy!'
+                sh 'mvn clean package'
             }
         }
         stage('Notify') {
             steps {
-                slackSend color: 'good', message: 'Testing "Slack" notifications...'
+                slackSend color: 'good', message: 'Building PoneCrafter branch ${branch} complete.'
             }
         }
     }
