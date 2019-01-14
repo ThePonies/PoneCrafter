@@ -9,7 +9,8 @@ import tornadofx.*
 import java.util.*
 import javax.json.JsonObject
 
-class Floor(name: String = "", description: String = "", price: Int = 0) : JsonModel {
+class Floor(name: String = "", description: String = "", price: Int = 0) : BaseModel() {
+
     val nameProperty = SimpleStringProperty(this, "name", name)
     var name: String by nameProperty
 
@@ -24,6 +25,10 @@ class Floor(name: String = "", description: String = "", price: Int = 0) : JsonM
 
     val uuidProperty = SimpleObjectProperty<UUID>(this, "uuid", UuidUtil.generateContentUuid())
     var uuid: UUID by uuidProperty
+
+    override fun getTypeName() = "floor"
+
+    override fun getModelName() = name
 
     override fun updateModel(json: JsonObject) {
         with(json) {
