@@ -7,6 +7,7 @@ import javafx.scene.image.Image
 import org.theponies.ponecrafter.Icons
 import org.theponies.ponecrafter.Styles
 import org.theponies.ponecrafter.view.editor.FloorEditorView
+import org.theponies.ponecrafter.view.editor.RoofEditorView
 import tornadofx.*
 
 class MenuView : View("PoneCrafter Menu") {
@@ -32,7 +33,9 @@ class MenuView : View("PoneCrafter Menu") {
             mainMenuButtonBox(this, "Floor Texture", Icons.floor) {
                 replaceWith<FloorEditorView>()
             }
-            mainMenuButtonBox(this, "Roof Texture", Icons.roof)
+            mainMenuButtonBox(this, "Roof Texture", Icons.roof) {
+                replaceWith<RoofEditorView>()
+            }
             mainMenuButtonBox(this, "Terrain Texture", Icons.terrain)
             mainMenuButtonBox(this, "Object", Icons.objects)
         }
