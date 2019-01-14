@@ -37,6 +37,7 @@ class Floor(name: String = "", description: String = "", price: Int = 0) : JsonM
     override fun toJSON(json: JsonBuilder) {
         with(json) {
             add("uuid", uuid)
+            add("type", "floor")
             add("name", name)
             add("description", description)
             add("price", price)
