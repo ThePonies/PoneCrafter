@@ -1,4 +1,4 @@
-package org.theponies.ponecrafter.view
+package org.theponies.ponecrafter.view.editor
 
 import javafx.geometry.Pos
 import javafx.scene.layout.Priority
@@ -8,6 +8,7 @@ import org.theponies.ponecrafter.controller.FloorEditorController
 import org.theponies.ponecrafter.model.FloorModel
 import org.theponies.ponecrafter.util.IntStringConverter
 import org.theponies.ponecrafter.util.UuidUtil
+import org.theponies.ponecrafter.view.MenuView
 import tornadofx.*
 
 class FloorEditorView : View("Create a Floor") {

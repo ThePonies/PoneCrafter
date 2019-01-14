@@ -6,6 +6,7 @@ import javafx.scene.Parent
 import javafx.scene.image.Image
 import org.theponies.ponecrafter.Icons
 import org.theponies.ponecrafter.Styles
+import org.theponies.ponecrafter.view.editor.FloorEditorView
 import tornadofx.*
 
 class MenuView : View("PoneCrafter Menu") {
