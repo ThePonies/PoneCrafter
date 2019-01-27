@@ -19,7 +19,8 @@ class FurnitureEditorView : TabEditorView("Create an Object", Icons.objects) {
 
     override fun addFooter(parent: Parent) = with(parent) {
         hbox(0, Pos.BOTTOM_LEFT) {
-            vbox(0, Pos.CENTER_LEFT) {
+            vgrow = Priority.ALWAYS
+            vbox(0, Pos.BOTTOM_LEFT) {
                 hgrow = Priority.ALWAYS
                 button("Back") {
                     action {
@@ -27,7 +28,7 @@ class FurnitureEditorView : TabEditorView("Create an Object", Icons.objects) {
                     }
                 }
             }
-            vbox(0, Pos.CENTER_RIGHT) {
+            vbox(0, Pos.BOTTOM_RIGHT) {
                 button("Save") {
                     enableWhen(model.valid)
                     action {
