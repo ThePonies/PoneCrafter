@@ -81,7 +81,7 @@ class FurnitureEditorView : TabEditorView("Create an Object", Icons.objects) {
                             vbox {
                                 padding = insets(0, 20, 0, 0)
                                 statNumberField(model.hygieneStat)
-                                statNumberField(model.socialStat, model.socialStat.name)
+                                statNumberField(model.socialStat)
                                 statNumberField(model.bladderStat)
                                 statNumberField(model.roomStat)
                             }
@@ -91,6 +91,20 @@ class FurnitureEditorView : TabEditorView("Create an Object", Icons.objects) {
                         addClass(Styles.editorFieldsSection)
                         prefWidth = 330.0
                         prefHeight = 120.0
+                        hbox {
+                            vbox {
+                                padding = insets(0, 20, 0, 0)
+                                statCheckbox(model.cookingStat)
+                                statCheckbox(model.mechanicalStat)
+                                statCheckbox(model.charismaStat)
+                            }
+                            vbox {
+                                padding = insets(0, 20, 0, 0)
+                                statCheckbox(model.bodyStat)
+                                statCheckbox(model.logicStat)
+                                statCheckbox(model.creativityStat)
+                            }
+                        }
                     }
                 }
             }
@@ -104,17 +118,19 @@ class FurnitureEditorView : TabEditorView("Create an Object", Icons.objects) {
     )
 }
 
-fun EventTarget.statNumberField(property: Property<Number>, name: String = property.name): Field {
-    return field(name.capitalize()) {
-        padding = insets(0)
-        textfield(property, IntStringConverter()) {
-            padding = insets(2, 0)
-            filterInput {
-                it.controlNewText.length <= 2 && it.controlNewText.isInt() && it.controlNewText.toInt() in 0..10
-            }
-            validator {
-                if (it.isNullOrBlank()) error("The $name field is required") else null
-            }
+fun EventTarget.statNumberField(property: Property<Number>, name: String = property.name) = field(name.capitalize()) {
+    padding = insets(0)
+    textfield(property, IntStringConverter()) {
+        padding = insets(2, 0)
+        filterInput {
+            it.controlNewText.length <= 2 && it.controlNewText.isInt() && it.controlNewText.toInt() in 0..10
+        }
+        validator {
+            if (it.isNullOrBlank()) error("The $name field is required") else null
         }
     }
+}
+
+fun EventTarget.statCheckbox(property: Property<Boolean>, name: String = property.name) = checkbox(name.capitalize(), property) {
+    padding = insets(5, 2)
 }

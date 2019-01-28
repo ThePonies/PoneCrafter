@@ -63,6 +63,9 @@ class Styles : Stylesheet() {
                 }
             }
         }
+        checkBox {
+            +standardText
+        }
         subtleText {
             font = defaultFont
             textFill = c("#7CA0C4")
@@ -96,13 +99,22 @@ class Styles : Stylesheet() {
             +roundCorners
             backgroundColor += textFieldColor
             padding = box(10.px)
-            field {
-                label {
-                    fontSize = 14.px
-                }
-                textField {
+            label {
+                fontSize = 14.px
+            }
+            textField {
+                backgroundColor += c("#193EA7")
+                fontSize = 14.px
+            }
+            checkBox {
+                fontSize = 14.px
+                box {
                     backgroundColor += c("#193EA7")
-                    fontSize = 14.px
+                }
+                and(selected) {
+                    mark {
+                        backgroundColor += textColor
+                    }
                 }
             }
         }
