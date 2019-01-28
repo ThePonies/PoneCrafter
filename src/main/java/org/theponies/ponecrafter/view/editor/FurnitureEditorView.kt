@@ -1,11 +1,15 @@
 package org.theponies.ponecrafter.view.editor
 
+import javafx.beans.property.Property
+import javafx.event.EventTarget
 import javafx.geometry.Pos
 import javafx.scene.Parent
 import javafx.scene.layout.Priority
 import javafx.scene.layout.VBox
 import org.theponies.ponecrafter.Icons
+import org.theponies.ponecrafter.Styles
 import org.theponies.ponecrafter.controller.FurnitureEditorController
+import org.theponies.ponecrafter.model.CatalogCategory
 import org.theponies.ponecrafter.model.FurnitureModel
 import org.theponies.ponecrafter.util.IntStringConverter
 import org.theponies.ponecrafter.view.MenuView
@@ -43,23 +47,51 @@ class FurnitureEditorView : TabEditorView("Create an Object", Icons.objects) {
 
     override fun createTabs(): Map<String, Parent> = mapOf(
         "Catalog" to VBox().fieldset {
+            padding = insets(0)
             field("Name") {
                 textfield(model.name).validator {
                     if (it.isNullOrBlank()) error("The name field is required") else null
                 }
                 labelContainer.alignment = Pos.TOP_LEFT
             }
-            field("Price") {
-                textfield(model.price, IntStringConverter()) {
-                    filterInput { it.controlNewText.isInt() }
-                    validator {
-                        if (it.isNullOrBlank()) error("The price field is required") else null
-                    }
-                }
+            numberField(model.price)
+            field("Category") {
+                combobox(model.category, CatalogCategory.values().toList())
             }
             field("Description") {
                 textarea(model.description) {
-                    prefHeight = 200.0
+                    prefHeight = 160.0
+                }
+            }
+            hbox {
+                field("Stats") {
+                    hgrow = Priority.ALWAYS
+                    fieldset("Needs") {
+                        addClass(Styles.editorFieldsSection)
+                        prefWidth = 330.0
+                        prefHeight = 120.0
+                        hbox {
+                            vbox {
+                                padding = insets(0, 20, 0, 0)
+                                statNumberField(model.hungerStat)
+                                statNumberField(model.energyStat)
+                                statNumberField(model.comfortStat)
+                                statNumberField(model.funStat)
+                            }
+                            vbox {
+                                padding = insets(0, 20, 0, 0)
+                                statNumberField(model.hygieneStat)
+                                statNumberField(model.socialStat, model.socialStat.name)
+                                statNumberField(model.bladderStat)
+                                statNumberField(model.roomStat)
+                            }
+                        }
+                    }
+                    fieldset("Skills") {
+                        addClass(Styles.editorFieldsSection)
+                        prefWidth = 330.0
+                        prefHeight = 120.0
+                    }
                 }
             }
         },
@@ -70,4 +102,19 @@ class FurnitureEditorView : TabEditorView("Create an Object", Icons.objects) {
             label("This will be the settings tab")
         }
     )
+}
+
+fun EventTarget.statNumberField(property: Property<Number>, name: String = property.name): Field {
+    return field(name.capitalize()) {
+        padding = insets(0)
+        textfield(property, IntStringConverter()) {
+            padding = insets(2, 0)
+            filterInput {
+                it.controlNewText.length <= 2 && it.controlNewText.isInt() && it.controlNewText.toInt() in 0..10
+            }
+            validator {
+                if (it.isNullOrBlank()) error("The $name field is required") else null
+            }
+        }
+    }
 }

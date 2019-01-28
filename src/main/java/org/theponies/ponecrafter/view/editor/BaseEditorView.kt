@@ -1,8 +1,11 @@
 package org.theponies.ponecrafter.view.editor
 
+import javafx.beans.property.Property
+import javafx.event.EventTarget
 import javafx.scene.Parent
 import javafx.scene.layout.Priority
 import org.theponies.ponecrafter.Styles
+import org.theponies.ponecrafter.util.IntStringConverter
 import tornadofx.*
 
 abstract class BaseEditorView(val name: String) : View(name) {
@@ -19,6 +22,17 @@ abstract class BaseEditorView(val name: String) : View(name) {
             }
             prefHeight = 80.0
             buttonBar(this)
+        }
+    }
+}
+
+fun EventTarget.numberField(property: Property<Number>, name: String = property.name) = field(name.capitalize()) {
+    textfield(property, IntStringConverter()) {
+        filterInput {
+            it.controlNewText.isInt()
+        }
+        validator {
+            if (it.isNullOrBlank()) error("The $name field is required") else null
         }
     }
 }

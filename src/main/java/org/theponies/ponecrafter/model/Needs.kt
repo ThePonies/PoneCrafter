@@ -11,7 +11,7 @@ class Needs : JsonModel {
     var energy: Int by energyProperty
     val comfortProperty = SimpleIntegerProperty(this, "comfort", 0)
     var comfort: Int by comfortProperty
-    val entertainmentProperty = SimpleIntegerProperty(this, "entertainment", 0)
+    val entertainmentProperty = SimpleIntegerProperty(this, "fun", 0)
     var entertainment: Int by entertainmentProperty
     val hygieneProperty = SimpleIntegerProperty(this, "hygiene", 0)
     var hygiene: Int by hygieneProperty
@@ -27,7 +27,7 @@ class Needs : JsonModel {
             hunger = int("hunger") ?: 0
             energy = int("energy") ?: 0
             comfort = int("comfort") ?: 0
-            entertainment = int("entertainment") ?: 0
+            entertainment = int("fun") ?: 0
             hygiene = int("hygiene") ?: 0
             social = int("social") ?: 0
             bladder = int("bladder") ?: 0
@@ -40,7 +40,7 @@ class Needs : JsonModel {
             add("hunger", hunger)
             add("energy", energy)
             add("comfort", comfort)
-            add("entertainment", entertainment)
+            add("fun", entertainment)
             add("hygiene", hygiene)
             add("social", social)
             add("bladder", bladder)

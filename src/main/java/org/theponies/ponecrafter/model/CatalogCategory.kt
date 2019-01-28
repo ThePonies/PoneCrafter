@@ -19,4 +19,8 @@ enum class CatalogCategory(val id: Int) {
     companion object {
         fun getById(id: Int) = values().firstOrNull { it.id == id } ?: NONE
     }
+
+    override fun toString(): String {
+        return name.toLowerCase().capitalize()
+    }
 }
