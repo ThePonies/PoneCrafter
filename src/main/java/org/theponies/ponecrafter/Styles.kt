@@ -66,6 +66,30 @@ class Styles : Stylesheet() {
         checkBox {
             +standardText
         }
+        comboBox {
+            +roundCorners
+            backgroundColor += textFieldColor
+            listCell {
+                +roundCorners
+                text {
+                    fill = textColor
+                }
+                and(hover) {
+                    text {
+                        fill = clickablePressedColor
+                    }
+                }
+                backgroundColor += textFieldColor
+            }
+            arrow {
+                backgroundColor += textColor
+            }
+            comboBoxPopup {
+                listView {
+                    backgroundColor += textFieldColor
+                }
+            }
+        }
         subtleText {
             font = defaultFont
             textFill = c("#7CA0C4")
