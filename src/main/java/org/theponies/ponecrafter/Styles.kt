@@ -9,6 +9,7 @@ class Styles : Stylesheet() {
         val mainMenuButton by cssclass()
         val svgPath by csselement("SVGPath")
         val windowTitle by cssclass()
+        val editorFieldsSection by cssclass()
 
         val background = c("#01478D")
         val textFieldColor = c("#092E87")
@@ -25,15 +26,18 @@ class Styles : Stylesheet() {
             textFill = textColor
             font = defaultFont
         }
+        val roundCorners = mixin {
+            borderRadius += box(20.px)
+            backgroundRadius += box(20.px)
+        }
         root {
             +standardText
             backgroundColor += background
         }
         button {
             +standardText
+            +roundCorners
             backgroundColor += buttonColor
-            borderRadius += box(20.px)
-            backgroundRadius += box(20.px)
             padding = box(10.px, 20.px)
         }
         label {
@@ -41,16 +45,14 @@ class Styles : Stylesheet() {
         }
         textField {
             +standardText
+            +roundCorners
             backgroundColor += textFieldColor
             borderColor += box(textFieldBorder)
-            borderRadius += box(20.px)
-            backgroundRadius += box(20.px)
         }
         textArea {
             +standardText
+            +roundCorners
             backgroundColor += textFieldColor
-            borderRadius += box(20.px)
-            backgroundRadius += box(20.px)
             scrollPane {
                 backgroundColor += Color.TRANSPARENT
                 viewport {
@@ -58,6 +60,33 @@ class Styles : Stylesheet() {
                 }
                 content {
                     backgroundColor += Color.TRANSPARENT
+                }
+            }
+        }
+        checkBox {
+            +standardText
+        }
+        comboBox {
+            +roundCorners
+            backgroundColor += textFieldColor
+            listCell {
+                +roundCorners
+                text {
+                    fill = textColor
+                }
+                and(hover) {
+                    text {
+                        fill = clickablePressedColor
+                    }
+                }
+                backgroundColor += textFieldColor
+            }
+            arrow {
+                backgroundColor += textColor
+            }
+            comboBoxPopup {
+                listView {
+                    backgroundColor += textFieldColor
                 }
             }
         }
@@ -89,6 +118,29 @@ class Styles : Stylesheet() {
         }
         windowTitle {
             fontSize = 22.px
+        }
+        editorFieldsSection {
+            +roundCorners
+            backgroundColor += textFieldColor
+            padding = box(10.px)
+            label {
+                fontSize = 14.px
+            }
+            textField {
+                backgroundColor += c("#193EA7")
+                fontSize = 14.px
+            }
+            checkBox {
+                fontSize = 14.px
+                box {
+                    backgroundColor += c("#193EA7")
+                }
+                and(selected) {
+                    mark {
+                        backgroundColor += textColor
+                    }
+                }
+            }
         }
     }
 }

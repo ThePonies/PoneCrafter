@@ -1,32 +1,23 @@
-package org.theponies.ponecrafter.view
+package org.theponies.ponecrafter.view.editor
 
 import javafx.geometry.Pos
 import javafx.scene.layout.Priority
 import org.theponies.ponecrafter.Icons
-import org.theponies.ponecrafter.Styles
 import org.theponies.ponecrafter.controller.FloorEditorController
 import org.theponies.ponecrafter.model.FloorModel
 import org.theponies.ponecrafter.util.IntStringConverter
 import org.theponies.ponecrafter.util.UuidUtil
+import org.theponies.ponecrafter.view.MenuView
 import tornadofx.*
 
-class FloorEditorView : View("Create a Floor") {
+class FloorEditorView : BaseEditorView("Create a Floor") {
     private val controller: FloorEditorController by inject()
     private val model: FloorModel = FloorModel()
 
     override val root = form {
         padding = insets(20)
         fieldset {
-            hbox {
-                svgpath(Icons.floor) {
-                    fill = Styles.textColor
-                }
-                label("Create a Floor") {
-                    addClass(Styles.windowTitle)
-                    padding = insets(15, 0)
-                }
-                prefHeight = 80.0
-            }
+            createHeader(this, name, Icons.floor)
             field("Name") {
                 textfield(model.name).validator {
                     if (it.isNullOrBlank()) error("The name field is required") else null
@@ -89,7 +80,7 @@ class FloorEditorView : View("Create a Floor") {
                 button("Load Image") {
                     prefWidth = 160.0
                     action {
-                        controller.chooseTextureDialog().let { model.image.value = it }
+                        controller.chooseTextureDialog(model.item.getTypeName()).let { model.image.value = it }
                     }
                 }
             }

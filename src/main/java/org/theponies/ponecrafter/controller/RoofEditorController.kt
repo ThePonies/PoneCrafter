@@ -1,12 +1,12 @@
 package org.theponies.ponecrafter.controller
 
-import org.theponies.ponecrafter.model.Floor
+import org.theponies.ponecrafter.model.Roof
 import java.io.File
 import java.util.zip.ZipEntry
 
-class FloorEditorController : BaseEditorController<Floor>() {
+class RoofEditorController : BaseEditorController<Roof>() {
 
-    override fun save(model: Floor, file: File) {
+    override fun save(model: Roof, file: File) {
         writeToZip(file) {
             it.putNextEntry(ZipEntry("properties.json"))
             it.write(model.toJSON().toString().toByteArray())
