@@ -37,7 +37,7 @@
                 <configuration>
                     <archive>
                         <manifest>
-                            <mainClass>org.theponies.ponecrafter.PoneCrafterApp</mainClass>
+                            <mainClass>org.theponies.ponecrafter.MainKt</mainClass>
                         </manifest>
                     </archive>
                     <descriptorRefs>
