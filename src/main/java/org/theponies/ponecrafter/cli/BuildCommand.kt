@@ -33,7 +33,7 @@ class BuildCommand(paramDescription: String, description: String) : Command(para
             typeMap.getValue(type).invoke(inputPath, outputFile)
             println("Successfully built $type to file: ${outputFile.toAbsolutePath()}")
         } catch (e: InvalidPathException) {
-            throw e
+            throw CliException("Invalid path: ${e.message}")
         }
     }
 
