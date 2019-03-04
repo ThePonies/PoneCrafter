@@ -4,7 +4,7 @@ class Cli {
     val commands = mapOf(
         Pair("help", HelpCommand("", "Display command help.", this)),
         Pair("create", CreateCommand("<type> <output folder>", "Create a new content item of the given type.")),
-        Pair("package", PackageCommand("<input folder> (<output folder>)", "Create a PCC file from a folder."))
+        Pair("build", BuildCommand("<input folder> (<output folder>)", "Create a PCC file from a folder."))
     )
 
     fun execute(args: Array<String>) {
