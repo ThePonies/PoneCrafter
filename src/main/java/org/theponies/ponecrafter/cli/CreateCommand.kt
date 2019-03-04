@@ -57,7 +57,7 @@ class CreateCommand(paramDescription: String, description: String) : Command(par
         val roof = Roof()
         val resourcePath = javaClass.getResourceAsStream("/images/placeholders/roof.png")
         roof.image = ImageData(resourcePath.readBytes())
-        roof.name = "New floor"
+        roof.name = "New roof"
         roof.description = "This is a new roof."
         controller.saveRaw(roof, outputPath)
     }
