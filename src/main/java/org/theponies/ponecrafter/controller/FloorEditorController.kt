@@ -1,6 +1,7 @@
 package org.theponies.ponecrafter.controller
 
 import org.theponies.ponecrafter.model.Floor
+import tornadofx.toPrettyString
 import java.io.File
 import java.nio.file.Files
 import java.nio.file.Path
@@ -19,7 +20,7 @@ class FloorEditorController : BaseEditorController<Floor>() {
     }
 
     override fun saveRaw(model: Floor, path: Path) {
-        Files.write(path.resolve("properties.json"), model.toJSON().toString().toByteArray())
+        Files.write(path.resolve("properties.json"), model.toJSON().toPrettyString().toByteArray())
         Files.write(path.resolve("texture.png"), model.image.data)
     }
 }
