@@ -13,7 +13,7 @@ pipeline {
         }
         stage('Archive') {
             steps {
-                archiveArtifacts(artifacts: 'target/*.jar', onlyIfSuccessful: true, fingerprint: true)
+                archiveArtifacts(artifacts: 'target/PoneCrafter.jar', onlyIfSuccessful: true, fingerprint: true)
             }
         }
     }
