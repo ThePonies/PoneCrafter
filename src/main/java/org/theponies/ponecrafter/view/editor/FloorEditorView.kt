@@ -85,9 +85,7 @@ class FloorEditorView : BaseEditorView("Create a Floor") {
                 }
             }
             vbox {
-                imageview(model.image) {
-                    prefWidth = 128.0
-                    prefHeight = 128.0
+                imageDataView(model.image, 128.0, 128.0) {
                     model.addValidator(this, model.image) {
                         if (model.image.value != null) success() else error()
                     }

@@ -1,10 +1,15 @@
 package org.theponies.ponecrafter.view.editor
 
 import javafx.beans.property.Property
+import javafx.beans.value.ObservableValue
 import javafx.event.EventTarget
+import javafx.scene.Node
 import javafx.scene.Parent
+import javafx.scene.image.Image
+import javafx.scene.image.ImageView
 import javafx.scene.layout.Priority
 import org.theponies.ponecrafter.Styles
+import org.theponies.ponecrafter.model.ImageData
 import org.theponies.ponecrafter.util.IntStringConverter
 import tornadofx.*
 
@@ -36,3 +41,15 @@ fun EventTarget.numberField(property: Property<Number>, name: String = property.
         }
     }
 }
+
+// Stolen from TornadoFX's Controls.kt, because if was internal.
+private inline fun <T : Node> T.attachTo(
+    parent: EventTarget,
+    after: T.() -> Unit,
+    before: (T) -> Unit
+) = this.also(before).attachTo(parent, after)
+
+fun EventTarget.imageDataView(observableData: ObservableValue<ImageData>, width: Double, height: Double, op: ImageView.() -> Unit = {}) =
+    ImageView().attachTo(this, op) { imageView ->
+        imageView.imageProperty().bind(objectBinding(observableData) { value?.let { Image(it.data.inputStream(), width, height, false, false) } })
+    }

@@ -16,8 +16,8 @@ class Roof(name: String = "", description: String = "") : BaseModel() {
     val descriptionProperty = SimpleStringProperty(this, "description", description)
     var description: String by descriptionProperty
 
-    val imageProperty = SimpleObjectProperty<Image>(this, "image", null)
-    var image: Image by imageProperty
+    val imageProperty = SimpleObjectProperty<ImageData>(this, "image", null)
+    var image: ImageData by imageProperty
 
     val uuidProperty = SimpleObjectProperty<UUID>(this, "uuid", UuidUtil.generateContentUuid())
     var uuid: UUID by uuidProperty

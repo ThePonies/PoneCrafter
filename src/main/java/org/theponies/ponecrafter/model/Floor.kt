@@ -3,7 +3,6 @@ package org.theponies.ponecrafter.model
 import javafx.beans.property.SimpleIntegerProperty
 import javafx.beans.property.SimpleObjectProperty
 import javafx.beans.property.SimpleStringProperty
-import javafx.scene.image.Image
 import org.theponies.ponecrafter.util.UuidUtil
 import tornadofx.*
 import java.util.*
@@ -20,8 +19,8 @@ class Floor(name: String = "", description: String = "", price: Int = 0) : BaseM
     val priceProperty = SimpleIntegerProperty(this, "price", price)
     var price: Int by priceProperty
 
-    val imageProperty = SimpleObjectProperty<Image>(this, "image", null)
-    var image: Image by imageProperty
+    val imageProperty = SimpleObjectProperty<ImageData>(this, "image", null)
+    var image: ImageData by imageProperty
 
     val uuidProperty = SimpleObjectProperty<UUID>(this, "uuid", UuidUtil.generateContentUuid())
     var uuid: UUID by uuidProperty

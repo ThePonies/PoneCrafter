@@ -1,7 +1,10 @@
 package org.theponies.ponecrafter.controller
 
 import org.theponies.ponecrafter.model.Roof
+import tornadofx.toPrettyString
 import java.io.File
+import java.nio.file.Files
+import java.nio.file.Path
 import java.util.zip.ZipEntry
 
 class RoofEditorController : BaseEditorController<Roof>() {
@@ -11,8 +14,13 @@ class RoofEditorController : BaseEditorController<Roof>() {
             it.putNextEntry(ZipEntry("properties.json"))
             it.write(model.toJSON().toString().toByteArray())
             it.putNextEntry(ZipEntry("texture.png"))
-            it.write(getImageBytes(model.image))
+            it.write(model.image.data)
             it.closeEntry()
         }
+    }
+
+    override fun saveRaw(model: Roof, path: Path) {
+        Files.write(path.resolve("properties.json"), model.toJSON().toPrettyString().toByteArray())
+        Files.write(path.resolve("texture.png"), model.image.data)
     }
 }

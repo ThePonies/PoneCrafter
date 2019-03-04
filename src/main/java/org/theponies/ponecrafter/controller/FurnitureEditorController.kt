@@ -1,7 +1,10 @@
 package org.theponies.ponecrafter.controller
 
 import org.theponies.ponecrafter.model.Furniture
+import tornadofx.toPrettyString
 import java.io.File
+import java.nio.file.Files
+import java.nio.file.Path
 import java.util.zip.ZipEntry
 
 class FurnitureEditorController : BaseEditorController<Furniture>() {
@@ -12,5 +15,9 @@ class FurnitureEditorController : BaseEditorController<Furniture>() {
             it.write(model.toJSON().toString().toByteArray())
             it.closeEntry()
         }
+    }
+
+    override fun saveRaw(model: Furniture, path: Path) {
+        Files.write(path.resolve("properties.json"), model.toJSON().toPrettyString().toByteArray())
     }
 }
