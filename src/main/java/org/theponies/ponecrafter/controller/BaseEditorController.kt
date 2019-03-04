@@ -5,6 +5,7 @@ import javafx.scene.control.Alert
 import javafx.scene.image.Image
 import javafx.stage.FileChooser
 import org.theponies.ponecrafter.model.BaseModel
+import org.theponies.ponecrafter.model.ImageData
 import tornadofx.Controller
 import tornadofx.FileChooserMode
 import tornadofx.alert
@@ -13,6 +14,7 @@ import java.io.BufferedOutputStream
 import java.io.ByteArrayOutputStream
 import java.io.File
 import java.io.FileOutputStream
+import java.nio.file.Path
 import java.util.zip.ZipOutputStream
 import javax.imageio.ImageIO
 
@@ -20,7 +22,7 @@ abstract class BaseEditorController<T : BaseModel> : Controller() {
 
     abstract fun save(model: T, file: File)
 
-    fun chooseTextureDialog(typeName: String): Image? {
+    fun chooseTextureDialog(typeName: String): ImageData? {
         val imageFile: File? = chooseFile(
             "Select $typeName texture...",
             arrayOf(FileChooser.ExtensionFilter("Image (png, jpeg, gif)", "*.png", "*.jpg", "*.jpeg", "*.gif"))
@@ -34,7 +36,7 @@ abstract class BaseEditorController<T : BaseModel> : Controller() {
                     "The image could not be loaded."
                 )
             } else {
-                return image
+                return ImageData(getImageBytes(image))
             }
         }
         return null

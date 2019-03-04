@@ -11,7 +11,7 @@ class FloorEditorController : BaseEditorController<Floor>() {
             it.putNextEntry(ZipEntry("properties.json"))
             it.write(model.toJSON().toString().toByteArray())
             it.putNextEntry(ZipEntry("texture.png"))
-            it.write(getImageBytes(model.image))
+            it.write(model.image.data)
             it.closeEntry()
         }
     }
