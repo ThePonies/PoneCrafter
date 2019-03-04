@@ -22,6 +22,8 @@ abstract class BaseEditorController<T : BaseModel> : Controller() {
 
     abstract fun save(model: T, file: File)
 
+    abstract fun saveRaw(model: T, path: Path)
+
     fun chooseTextureDialog(typeName: String): ImageData? {
         val imageFile: File? = chooseFile(
             "Select $typeName texture...",
