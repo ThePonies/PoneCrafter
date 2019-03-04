@@ -1,9 +1,10 @@
 package org.theponies.ponecrafter.cli
 
 class Cli {
-    private val commands = mapOf(
-        Pair("help", Command("", "Display command help.", ::help)),
-        Pair("create", Command("<input file> (<output file>)", "Create a PCC file from a folder.", ::create))
+    val commands = mapOf(
+        Pair("help", HelpCommand("", "Display command help.", this)),
+        Pair("create", CreateCommand("<type> <output folder>", "Create a new content item of the given type.")),
+        Pair("package", PackageCommand("<input folder> (<output folder>)", "Create a PCC file from a folder."))
     )
 
     fun execute(args: Array<String>) {
@@ -15,24 +16,15 @@ class Cli {
         val command = args[1]
         val params = args.drop(2)
         if (commands.containsKey(command)) {
-            commands.getValue(command).callback.invoke(params)
+            try {
+                commands.getValue(command).execute(params)
+            } catch (e: CliException) {
+                System.err.println(e.message)
+            }
         } else {
             println("Invalid command: $command")
             println("Try 'cli help' for a list of commands.")
         }
     }
 
-    private fun help(params: List<String>) {
-        println("Usage: <executable> cli <command> [parameters]")
-        println("CLI commands:")
-        commands.forEach {k, v ->
-            println("$k ${v.paramDescription}: ${v.description}")
-        }
-    }
-
-    private fun create(params: List<String>) {
-
-    }
-
-    data class Command(val paramDescription: String, val description: String, val callback: (params: List<String>) -> Any)
 }

@@ -71,7 +71,7 @@ abstract class BaseEditorController<T : BaseModel> : Controller() {
         zos.use { zip -> output(zip) }
     }
 
-    protected fun getImageBytes(image: Image): ByteArray {
+    private fun getImageBytes(image: Image): ByteArray {
         val bufferedImage = SwingFXUtils.fromFXImage(image, null)
         ByteArrayOutputStream().use { output ->
             ImageIO.write(bufferedImage, "png", output)
