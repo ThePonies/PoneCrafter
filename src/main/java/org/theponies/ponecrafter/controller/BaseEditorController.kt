@@ -1,7 +1,7 @@
 package org.theponies.ponecrafter.controller
 
 import javafx.embed.swing.SwingFXUtils
-import javafx.scene.control.Alert
+import javafx.scene.control.Alert.AlertType
 import javafx.scene.image.Image
 import javafx.stage.FileChooser
 import org.theponies.ponecrafter.model.BaseModel
@@ -14,6 +14,7 @@ import java.io.BufferedOutputStream
 import java.io.ByteArrayOutputStream
 import java.io.File
 import java.io.FileOutputStream
+import java.nio.file.Files
 import java.nio.file.Path
 import java.util.zip.ZipOutputStream
 import javax.imageio.ImageIO
@@ -33,7 +34,7 @@ abstract class BaseEditorController<T : BaseModel> : Controller() {
             val image = Image(imageFile.toURI().toString(), 128.0, 128.0, false, true)
             if (image.isError) {
                 alert(
-                    Alert.AlertType.ERROR,
+                    AlertType.ERROR,
                     "Can't load image",
                     "The image could not be loaded."
                 )
@@ -47,7 +48,7 @@ abstract class BaseEditorController<T : BaseModel> : Controller() {
     fun saveDialog(model: T) {
         val file = chooseFile(
             "Save ${model.getTypeName()}...",
-            arrayOf(FileChooser.ExtensionFilter("PoneCrafter Content", "*.pcc")),
+            arrayOf(FileChooser.ExtensionFilter("PoneCrafter Content", "*.pcc"), FileChooser.ExtensionFilter("Raw content", "*")),
             FileChooserMode.Save
         ) {
             val regex = Regex("[^A-Za-z0-9 ]")
@@ -55,13 +56,26 @@ abstract class BaseEditorController<T : BaseModel> : Controller() {
             initialFileName = "$name.pcc"
         }.firstOrNull()
         if (file != null) {
-            save(model, file)
-            alert(
-                Alert.AlertType.INFORMATION,
-                "Success",
+            val message = if (file.extension.isNotEmpty()) {
+                save(model, file)
                 "${model.getTypeName().capitalize()} saved to ${file.name}"
-            )
+            } else {
+                handleRawSave(file, model)
+                "Raw ${model.getTypeName()} saved to folder ${file.name}"
+            }
+            alert(AlertType.INFORMATION, "Success", message)
         }
+    }
+
+    private fun handleRawSave(file: File, model: T) {
+        val outputPath = file.toPath()
+        Files.createDirectories(outputPath)
+        val directoryStream = Files.newDirectoryStream(outputPath)
+        if (directoryStream.iterator().hasNext()) {
+            alert(AlertType.ERROR, "The selected folder must be empty to save in raw format.")
+            return
+        }
+        saveRaw(model, file.toPath())
     }
 
     protected fun writeToZip(file: File, output: (zip: ZipOutputStream) -> Unit) {
