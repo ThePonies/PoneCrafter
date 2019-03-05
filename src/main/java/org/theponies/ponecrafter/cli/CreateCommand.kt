@@ -45,20 +45,18 @@ class CreateCommand(paramDescription: String, description: String) : Command(par
     private fun createFloor(outputPath: Path) {
         val controller = FloorEditorController()
         val floor = Floor()
-        val resourcePath = javaClass.getResourceAsStream("/images/placeholders/floor.png")
         floor.name = "New floor"
         floor.description = "This is a new floor."
-        floor.image = ImageData(resourcePath.readBytes())
+        floor.image = ImageData(readResource("/images/placeholders/floor.png"))
         controller.saveRaw(floor, outputPath)
     }
 
     private fun createRoof(outputPath: Path) {
         val controller = RoofEditorController()
         val roof = Roof()
-        val resourcePath = javaClass.getResourceAsStream("/images/placeholders/roof.png")
-        roof.image = ImageData(resourcePath.readBytes())
         roof.name = "New roof"
         roof.description = "This is a new roof."
+        roof.image = ImageData(readResource("/images/placeholders/roof.png"))
         controller.saveRaw(roof, outputPath)
     }
 
@@ -68,5 +66,9 @@ class CreateCommand(paramDescription: String, description: String) : Command(par
         furniture.name = "New object"
         furniture.description = "This is a new object."
         controller.saveRaw(furniture, outputPath)
+    }
+
+    private fun readResource(location: String) = javaClass.getResourceAsStream(location).use {
+        it.readBytes()
     }
 }
