@@ -71,7 +71,7 @@ class RoofEditorView : BaseEditorView("Create a Roof") {
                 button("Load Image") {
                     prefWidth = 160.0
                     action {
-                        controller.chooseTextureDialog(model.item.getTypeName()).let { model.image.value = it }
+                        controller.chooseTextureDialog(model.item.getTypeName(), true).let { model.image.value = it }
                     }
                 }
             }

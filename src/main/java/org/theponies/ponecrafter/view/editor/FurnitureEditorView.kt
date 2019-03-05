@@ -111,6 +111,28 @@ class FurnitureEditorView : TabEditorView("Create an Object", Icons.objects) {
         },
         "Model" to VBox().fieldset {
             label("This will be the model tab")
+            button("Load model") {
+                prefWidth = 160.0
+                action {
+                    controller.chooseMeshDialog(model.item.getTypeName()).let { model.meshData.value = it }
+                }
+            }
+            model.addValidator(this, model.meshData) {
+                if (model.texture.value != null) success() else error()
+            }
+            button("Load texture") {
+                prefWidth = 160.0
+                action {
+                    controller.chooseTextureDialog(model.item.getTypeName(), false).let { model.texture.value = it }
+                }
+            }
+            vbox {
+                imageDataView(model.texture, 128.0, 128.0) {
+                    model.addValidator(this, model.texture) {
+                        if (model.texture.value != null) success() else error()
+                    }
+                }
+            }
         },
         "Settings" to VBox().fieldset {
             label("This will be the settings tab")

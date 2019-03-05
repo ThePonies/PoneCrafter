@@ -32,4 +32,7 @@ class FurnitureModel(val furniture: Furniture = Furniture()) : ViewModel() {
     val bodyStat = bind { furniture.skillStats.bodyProperty }
     val logicStat = bind { furniture.skillStats.logicProperty }
     val creativityStat = bind { furniture.skillStats.creativityProperty }
+
+    val meshData = bind { furniture.meshDataProperty }
+    val texture = bind { furniture.textureProperty }
 }

@@ -6,6 +6,7 @@ import javafx.scene.image.Image
 import javafx.stage.FileChooser
 import org.theponies.ponecrafter.model.BaseModel
 import org.theponies.ponecrafter.model.ImageData
+import org.theponies.ponecrafter.model.MeshData
 import tornadofx.Controller
 import tornadofx.FileChooserMode
 import tornadofx.alert
@@ -25,13 +26,17 @@ abstract class BaseEditorController<T : BaseModel> : Controller() {
 
     abstract fun saveRaw(model: T, path: Path)
 
-    fun chooseTextureDialog(typeName: String): ImageData? {
+    fun chooseTextureDialog(typeName: String, reformat: Boolean): ImageData? {
         val imageFile: File? = chooseFile(
             "Select $typeName texture...",
             arrayOf(FileChooser.ExtensionFilter("Image (png, jpeg, gif)", "*.png", "*.jpg", "*.jpeg", "*.gif"))
         ).firstOrNull()
         if (imageFile != null) {
-            val image = Image(imageFile.toURI().toString(), 128.0, 128.0, false, true)
+            val image = if (reformat) {
+                Image(imageFile.toURI().toString(), 128.0, 128.0, false, true)
+            } else {
+                Image(imageFile.toURI().toString())
+            }
             if (image.isError) {
                 alert(
                     AlertType.ERROR,
@@ -41,6 +46,17 @@ abstract class BaseEditorController<T : BaseModel> : Controller() {
             } else {
                 return ImageData(getImageBytes(image))
             }
+        }
+        return null
+    }
+
+    fun chooseMeshDialog(typeName: String): MeshData? {
+        val meshFile: File? = chooseFile(
+            "Select $typeName model...",
+            arrayOf(FileChooser.ExtensionFilter("OBJ model", "*.obj"))
+        ).firstOrNull()
+        if (meshFile != null) {
+            return MeshData(meshFile.inputStream().use { it.readBytes() })
         }
         return null
     }
