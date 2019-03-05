@@ -45,6 +45,12 @@ class Furniture(name: String = "", description: String = "", price: Int = 0) : B
     val requiredAgeProperty = SimpleObjectProperty<Age>(this, "requiredAge", Age.ANY)
     var requiredAge: Age by requiredAgeProperty
 
+    val meshDataProperty = SimpleObjectProperty<MeshData>(this, "meshData", null)
+    var meshData: MeshData by meshDataProperty
+
+    val textureProperty = SimpleObjectProperty<ImageData>(this, "texture", null)
+    var texture: ImageData by textureProperty
+
     override fun getTypeName() = "furniture"
 
     override fun getModelName() = name

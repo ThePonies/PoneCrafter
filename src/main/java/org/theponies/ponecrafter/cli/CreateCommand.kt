@@ -3,10 +3,7 @@ package org.theponies.ponecrafter.cli
 import org.theponies.ponecrafter.controller.FloorEditorController
 import org.theponies.ponecrafter.controller.FurnitureEditorController
 import org.theponies.ponecrafter.controller.RoofEditorController
-import org.theponies.ponecrafter.model.Floor
-import org.theponies.ponecrafter.model.Furniture
-import org.theponies.ponecrafter.model.ImageData
-import org.theponies.ponecrafter.model.Roof
+import org.theponies.ponecrafter.model.*
 import java.io.IOException
 import java.nio.file.Files
 import java.nio.file.Path
@@ -65,6 +62,8 @@ class CreateCommand(paramDescription: String, description: String) : Command(par
         val furniture = Furniture()
         furniture.name = "New object"
         furniture.description = "This is a new object."
+        furniture.meshData = MeshData(readResource("/images/placeholders/furniture.obj"))
+        furniture.texture = ImageData(readResource("/images/placeholders/furniture.png"))
         controller.saveRaw(furniture, outputPath)
     }
 

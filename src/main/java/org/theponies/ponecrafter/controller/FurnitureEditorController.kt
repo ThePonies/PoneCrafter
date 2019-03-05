@@ -13,11 +13,17 @@ class FurnitureEditorController : BaseEditorController<Furniture>() {
         writeToZip(file) {
             it.putNextEntry(ZipEntry("properties.json"))
             it.write(model.toJSON().toString().toByteArray())
+            it.putNextEntry(ZipEntry("model.obj"))
+            it.write(model.meshData.data)
+            it.putNextEntry(ZipEntry("texture.png"))
+            it.write(model.texture.data)
             it.closeEntry()
         }
     }
 
     override fun saveRaw(model: Furniture, path: Path) {
         Files.write(path.resolve("properties.json"), model.toJSON().toPrettyString().toByteArray())
+        Files.write(path.resolve("model.obj"), model.meshData.data)
+        Files.write(path.resolve("texture.png"), model.texture.data)
     }
 }

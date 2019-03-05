@@ -3,10 +3,7 @@ package org.theponies.ponecrafter.cli
 import org.theponies.ponecrafter.controller.FloorEditorController
 import org.theponies.ponecrafter.controller.FurnitureEditorController
 import org.theponies.ponecrafter.controller.RoofEditorController
-import org.theponies.ponecrafter.model.Floor
-import org.theponies.ponecrafter.model.Furniture
-import org.theponies.ponecrafter.model.ImageData
-import org.theponies.ponecrafter.model.Roof
+import org.theponies.ponecrafter.model.*
 import tornadofx.loadJsonObject
 import java.nio.file.Files
 import java.nio.file.InvalidPathException
@@ -90,7 +87,11 @@ class BuildCommand(paramDescription: String, description: String) : Command(para
         val furniture = Furniture()
         try {
             val properties = loadJsonObject(inputPath.resolve("properties.json"))
+            val meshData = MeshData(Files.readAllBytes(inputPath.resolve("model.obj")))
+            val textureData = ImageData(Files.readAllBytes(inputPath.resolve("texture.png")))
             furniture.updateModel(properties)
+            furniture.meshData = meshData
+            furniture.texture = textureData
             controller.save(furniture, outputFile.toFile())
         } catch (e: NoSuchFileException) {
             throw CliException("Missing file: ${e.message}")
