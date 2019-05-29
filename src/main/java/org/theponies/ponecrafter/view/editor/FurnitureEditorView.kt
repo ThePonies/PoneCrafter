@@ -8,6 +8,7 @@ import javafx.scene.layout.Priority
 import javafx.scene.layout.VBox
 import org.theponies.ponecrafter.Icons
 import org.theponies.ponecrafter.Styles
+import org.theponies.ponecrafter.component.ModelViewer
 import org.theponies.ponecrafter.controller.FurnitureEditorController
 import org.theponies.ponecrafter.model.CatalogCategory
 import org.theponies.ponecrafter.model.FurnitureModel
@@ -110,15 +111,35 @@ class FurnitureEditorView : TabEditorView("Create an Object", Icons.objects) {
             }
         },
         "Model" to VBox().fieldset {
+            val modelViewer = ModelViewer(240, 240, Styles.textFieldColor)
             label("This will be the model tab")
             button("Load model") {
                 prefWidth = 160.0
                 action {
-                    controller.chooseMeshDialog(model.item.getTypeName()).let { model.meshData.value = it }
+                    controller.chooseMeshDialog(model.item.getTypeName())?.let {
+                        model.meshData.value = it
+                        modelViewer.loadModel(it)
+                    }
                 }
             }
             model.addValidator(this, model.meshData) {
                 if (model.texture.value != null) success() else error()
+            }
+            vbox {
+                modelViewer.rotateY(45)
+                add(modelViewer)
+                hbox {
+                    button("<<") {
+                        action {
+                            modelViewer.rotateY(-90)
+                        }
+                    }
+                    button(">>") {
+                        action {
+                            modelViewer.rotateY(90)
+                        }
+                    }
+                }
             }
             button("Load texture") {
                 prefWidth = 160.0
