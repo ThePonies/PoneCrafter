@@ -1,15 +1,22 @@
 package org.theponies.ponecrafter.component
 
-import org.theponies.ponecrafter.util.importer.ObjImporter
 import javafx.scene.*
+import javafx.scene.image.Image
 import javafx.scene.paint.Color
+import javafx.scene.paint.Material
+import javafx.scene.paint.PhongMaterial
+import javafx.scene.shape.MeshView
 import javafx.scene.transform.Rotate
 import javafx.scene.transform.Translate
+import org.theponies.ponecrafter.model.ImageData
 import org.theponies.ponecrafter.model.MeshData
+import org.theponies.ponecrafter.util.importer.ObjImporter
 
 class ModelViewer(width: Int, height: Int, backgroundColor: Color) : SubScene(Group(), width.toDouble(), height.toDouble(), true, SceneAntialiasing.BALANCED) {
     private val cameraYRotate = Rotate(0.0, Rotate.Y_AXIS)
     private var model: Node? = null
+    private var meshView: MeshView? = null
+    private var material: Material? = null
     private val root = getRoot() as Group
 
     init {
@@ -29,12 +36,30 @@ class ModelViewer(width: Int, height: Int, backgroundColor: Color) : SubScene(Gr
         cameraYRotate.angle += amount.toDouble()
     }
 
-    fun loadModel(meshData: MeshData) {
+    fun loadModel(meshData: MeshData): Boolean {
         root.children.remove(model)
-        ObjImporter().importModel(meshData).let {
-            it.transforms.add(Rotate(180.0, Rotate.Z_AXIS))
-            model = it
+        val meshView = ObjImporter().importModel(meshData)
+        if (meshView != null) {
+            val model = Group(meshView)
+            model.transforms.add(Rotate(180.0, Rotate.Z_AXIS))
+            root.children.addAll(model)
+            this.model = model
+            this.meshView = meshView
+            updateMaterial()
+            return true
         }
-        root.children.addAll(model)
+        return false
+    }
+
+    fun setTexture(imageData: ImageData) {
+        val texture = Image(imageData.data.inputStream())
+        val material = PhongMaterial()
+        material.diffuseMap = texture
+        this.material = material
+        updateMaterial()
+    }
+
+    private fun updateMaterial() {
+        material?.let { meshView?.material = it }
     }
 }

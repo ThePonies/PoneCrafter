@@ -25,13 +25,17 @@ class ObjImporter {
 
     private val meshes = HashMap<String, TriangleMesh>()
 
-    fun importModel(meshData: MeshData): Node {
+    fun importModel(meshData: MeshData): MeshView? {
         val group = Group()
         read(meshData)
-        for (mesh in getMeshes()) {
-            group.children.add(buildMeshView(mesh))
+        // For now, we'll stick to single-mesh objects.
+        val mesh = getMeshes().firstOrNull()
+        if (mesh != null) {
+            val meshView = buildMeshView(mesh)
+            group.children.add(meshView)
+            return meshView
         }
-        return group
+        return null
     }
 
     private fun vertexIndex(vertexIndex: Int): Int {

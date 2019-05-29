@@ -117,8 +117,9 @@ class FurnitureEditorView : TabEditorView("Create an Object", Icons.objects) {
                 prefWidth = 160.0
                 action {
                     controller.chooseMeshDialog(model.item.getTypeName())?.let {
-                        model.meshData.value = it
-                        modelViewer.loadModel(it)
+                        if (modelViewer.loadModel(it)) {
+                            model.meshData.value = it
+                        }
                     }
                 }
             }
@@ -144,7 +145,10 @@ class FurnitureEditorView : TabEditorView("Create an Object", Icons.objects) {
             button("Load texture") {
                 prefWidth = 160.0
                 action {
-                    controller.chooseTextureDialog(model.item.getTypeName(), false).let { model.texture.value = it }
+                    controller.chooseTextureDialog(model.item.getTypeName(), false)?.let {
+                        model.texture.value = it
+                        modelViewer.setTexture(it)
+                    }
                 }
             }
             vbox {
