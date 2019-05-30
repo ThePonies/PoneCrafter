@@ -124,7 +124,7 @@ class FurnitureEditorView : TabEditorView("Create an Object", Icons.objects) {
                         }
                     }
                     model.addValidator(this, model.meshData) {
-                        if (model.texture.value != null) success() else error()
+                        if (model.meshData.value != null) success() else error()
                     }
                 }
                 vbox {
