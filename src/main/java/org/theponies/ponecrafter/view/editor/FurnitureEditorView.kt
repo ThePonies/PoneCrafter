@@ -111,49 +111,63 @@ class FurnitureEditorView : TabEditorView("Create an Object", Icons.objects) {
             }
         },
         "Model" to VBox().fieldset {
-            val modelViewer = ModelViewer(240, 240, model.meshData, model.texture) {
-                fill = Styles.textFieldColor
-            }
             label("This will be the model tab")
-            button("Load model") {
-                prefWidth = 160.0
-                action {
-                    controller.chooseMeshDialog(model.item.getTypeName())?.let {
-                        model.meshData.value = it
-                    }
-                }
-            }
-            model.addValidator(this, model.meshData) {
-                if (model.texture.value != null) success() else error()
-            }
-            vbox {
-                modelViewer.rotateY(45)
-                add(modelViewer)
-                hbox {
-                    button("<<") {
+            hbox {
+                vbox {
+                    hgrow = Priority.ALWAYS
+                    button("Load model") {
+                        prefWidth = 160.0
                         action {
-                            modelViewer.rotateY(-90)
+                            controller.chooseMeshDialog(model.item.getTypeName())?.let {
+                                model.meshData.value = it
+                            }
                         }
                     }
-                    button(">>") {
-                        action {
-                            modelViewer.rotateY(90)
-                        }
-                    }
-                }
-            }
-            button("Load texture") {
-                prefWidth = 160.0
-                action {
-                    controller.chooseTextureDialog(model.item.getTypeName(), false)?.let {
-                        model.texture.value = it
-                    }
-                }
-            }
-            vbox {
-                imageDataView(model.texture, 128.0, 128.0) {
-                    model.addValidator(this, model.texture) {
+                    model.addValidator(this, model.meshData) {
                         if (model.texture.value != null) success() else error()
+                    }
+                }
+                vbox {
+                    val modelViewer = ModelViewer(240, 240, model.meshData, model.texture) {
+                        fill = Styles.textFieldColor
+                        rotateY(45)
+                    }
+                    add(modelViewer)
+                    hbox {
+                        alignment = Pos.CENTER
+                        padding = insets(10)
+                        button("<<") {
+                            spacing = 10.0
+                            action {
+                                modelViewer.rotateY(-90)
+                            }
+                        }
+                        button(">>") {
+                            spacing = 10.0
+                            action {
+                                modelViewer.rotateY(90)
+                            }
+                        }
+                    }
+                }
+            }
+            hbox {
+                vbox {
+                    hgrow = Priority.ALWAYS
+                    button("Load texture") {
+                        prefWidth = 160.0
+                        action {
+                            controller.chooseTextureDialog(model.item.getTypeName(), false)?.let {
+                                model.texture.value = it
+                            }
+                        }
+                    }
+                }
+                vbox {
+                    imageDataView(model.texture, 128.0, 128.0) {
+                        model.addValidator(this, model.texture) {
+                            if (model.texture.value != null) success() else error()
+                        }
                     }
                 }
             }
