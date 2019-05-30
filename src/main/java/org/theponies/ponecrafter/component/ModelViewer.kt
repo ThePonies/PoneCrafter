@@ -29,10 +29,12 @@ class ModelViewer(
         val camera = PerspectiveCamera(true)
         val cameraLookXRotate = Rotate(-30.0, Rotate.X_AXIS)
         val cameraLookZRotate = Rotate(0.0, Rotate.Z_AXIS)
-        val cameraPosition = Translate(0.0, -4.0, -7.0)
+        val cameraPosition = Translate(0.0, -122.0, -210.0)
+        // Fake parallel camera, muahahaha
+        camera.fieldOfView = 1.0
         camera.transforms.addAll(cameraYRotate, cameraPosition, cameraLookXRotate, cameraLookZRotate)
-        camera.nearClip = 0.1
-        camera.farClip = 100.0
+        camera.nearClip = 5.0
+        camera.farClip = 500.0
         setCamera(camera)
         root.children.add(camera)
         observableMeshData.addListener { _, _, newValue -> if (newValue != null) loadModel(newValue) }
