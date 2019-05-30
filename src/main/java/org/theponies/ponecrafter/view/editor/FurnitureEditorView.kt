@@ -111,15 +111,15 @@ class FurnitureEditorView : TabEditorView("Create an Object", Icons.objects) {
             }
         },
         "Model" to VBox().fieldset {
-            val modelViewer = ModelViewer(240, 240, Styles.textFieldColor)
+            val modelViewer = ModelViewer(240, 240, model.meshData, model.texture) {
+                fill = Styles.textFieldColor
+            }
             label("This will be the model tab")
             button("Load model") {
                 prefWidth = 160.0
                 action {
                     controller.chooseMeshDialog(model.item.getTypeName())?.let {
-                        if (modelViewer.loadModel(it)) {
-                            model.meshData.value = it
-                        }
+                        model.meshData.value = it
                     }
                 }
             }
@@ -147,7 +147,6 @@ class FurnitureEditorView : TabEditorView("Create an Object", Icons.objects) {
                 action {
                     controller.chooseTextureDialog(model.item.getTypeName(), false)?.let {
                         model.texture.value = it
-                        modelViewer.setTexture(it)
                     }
                 }
             }
