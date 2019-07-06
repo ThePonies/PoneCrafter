@@ -5,9 +5,8 @@ import java.util.HashMap
 import java.util.logging.Level
 import java.util.logging.Logger
 
-import javafx.scene.Group
-import javafx.scene.Node
 import javafx.scene.shape.CullFace
+import javafx.scene.shape.Mesh
 import javafx.scene.shape.MeshView
 import javafx.scene.shape.TriangleMesh
 import org.theponies.ponecrafter.model.MeshData
@@ -26,16 +25,19 @@ class ObjImporter {
     private val meshes = HashMap<String, TriangleMesh>()
 
     fun importModel(meshData: MeshData): MeshView? {
-        val group = Group()
         read(meshData)
         // For now, we'll stick to single-mesh objects.
-        val mesh = getMeshes().firstOrNull()
-        if (mesh != null) {
-            val meshView = buildMeshView(mesh)
-            group.children.add(meshView)
-            return meshView
+        val key = meshes.keys.firstOrNull()
+        if (key != null) {
+            return buildMeshView(key)
         }
         return null
+    }
+
+    fun importMesh(meshData: MeshData): Mesh? {
+        read(meshData)
+        // For now, we'll stick to single-mesh objects.
+        return meshes.getOrDefault(meshes.keys.firstOrNull(), null)
     }
 
     private fun vertexIndex(vertexIndex: Int): Int {
@@ -60,10 +62,6 @@ class ObjImporter {
         } else {
             normalIndex - 1
         }
-    }
-
-    private fun getMeshes(): Set<String> {
-        return meshes.keys
     }
 
     private fun buildMeshView(key: String): MeshView {

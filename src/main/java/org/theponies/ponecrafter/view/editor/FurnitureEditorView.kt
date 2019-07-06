@@ -128,7 +128,7 @@ class FurnitureEditorView : TabEditorView("Create an Object", Icons.objects) {
                     }
                 }
                 vbox {
-                    val modelViewer = ModelViewer(240, 240, model.meshData, model.texture) {
+                    val modelViewer = ModelViewer(240, 240, model.meshData, model.texture, model.occupiedTiles) {
                         fill = Styles.textFieldColor
                         rotateY(45)
                     }

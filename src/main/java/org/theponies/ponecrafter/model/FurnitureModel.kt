@@ -13,7 +13,7 @@ class FurnitureModel(val furniture: Furniture = Furniture()) : ViewModel() {
     val category = bind { furniture.categoryProperty }
     val pickupable = bind { furniture.pickupableProperty }
     val sellable = bind { furniture.sellableProperty }
-    val occupiedTiles = bind { furniture.occupiedTilesProperty }
+    val occupiedTiles = furniture.occupiedTilesProperty.value
     val placementRestrictions = bind { furniture.placementRestrictionsProperty }
     val requiredAge = bind { furniture.requiredAgeProperty }
 

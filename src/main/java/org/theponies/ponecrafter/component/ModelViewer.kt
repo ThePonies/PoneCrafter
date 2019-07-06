@@ -1,6 +1,8 @@
 package org.theponies.ponecrafter.component
 
+import javafx.beans.InvalidationListener
 import javafx.beans.value.ObservableValue
+import javafx.collections.ObservableList
 import javafx.scene.*
 import javafx.scene.image.Image
 import javafx.scene.paint.Material
@@ -10,18 +12,21 @@ import javafx.scene.transform.Rotate
 import javafx.scene.transform.Translate
 import org.theponies.ponecrafter.model.ImageData
 import org.theponies.ponecrafter.model.MeshData
+import org.theponies.ponecrafter.model.Vector2
 import org.theponies.ponecrafter.util.importer.ObjImporter
+import tornadofx.add
 
 class ModelViewer(
     width: Int,
     height: Int,
     observableMeshData: ObservableValue<MeshData?>,
     observableTexture: ObservableValue<ImageData?>,
+    observableTiles: ObservableList<Vector2>,
     op: ModelViewer.() -> Unit = {}
 ) : SubScene(Group(), width.toDouble(), height.toDouble(), true, SceneAntialiasing.BALANCED) {
     private val cameraYRotate = Rotate(0.0, Rotate.Y_AXIS)
-    private var model: Node? = null
     private var meshView: MeshView? = null
+    private var tilesModel: Node
     private var material: Material? = null
     private val root = getRoot() as Group
 
@@ -39,6 +44,9 @@ class ModelViewer(
         root.children.add(camera)
         observableMeshData.addListener { _, _, newValue -> if (newValue != null) loadModel(newValue) }
         observableTexture.addListener { _, _, newValue -> if (newValue != null) setTexture(newValue) }
+        observableTiles.addListener(InvalidationListener { loadTiles(observableTiles) })
+        loadTiles(observableTiles)
+        tilesModel = Group()
         op()
     }
 
@@ -47,18 +55,38 @@ class ModelViewer(
     }
 
     private fun loadModel(meshData: MeshData): Boolean {
-        root.children.remove(model)
+        root.children.remove(meshView)
         val meshView = ObjImporter().importModel(meshData)
         if (meshView != null) {
-            val model = Group(meshView)
-            model.transforms.add(Rotate(180.0, Rotate.Z_AXIS))
-            root.children.addAll(model)
-            this.model = model
+            meshView.transforms.add(Rotate(180.0, Rotate.Z_AXIS))
+            root.children.addAll(meshView)
             this.meshView = meshView
             updateMaterial()
             return true
         }
         return false
+    }
+
+    fun loadTiles(tiles: List<Vector2>) {
+        val meshData = MeshData(javaClass.getResourceAsStream("/models/tilemarker.obj").use { it.readBytes() })
+        val texture = Image(javaClass.getResourceAsStream("/models/tilemarker.png"))
+        val mesh = ObjImporter().importMesh(meshData)
+        val material = PhongMaterial()
+        material.diffuseMap = texture
+
+        root.children.remove(tilesModel)
+        tilesModel = Group()
+
+        tiles.forEach {
+            val meshView = MeshView(mesh)
+            meshView.transforms.add(Rotate(180.0, Rotate.Z_AXIS))
+            meshView.transforms.add(Translate(it.x.toDouble(), 0.0, it.y.toDouble()))
+            meshView.material = material
+            tilesModel.add(meshView)
+        }
+
+        root.children.add(tilesModel)
+
     }
 
     private fun setTexture(imageData: ImageData) {
