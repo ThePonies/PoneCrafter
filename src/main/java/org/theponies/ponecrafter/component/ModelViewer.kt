@@ -74,13 +74,18 @@ class ModelViewer(
         val material = PhongMaterial()
         material.diffuseMap = texture
 
+        val tilesWidth = (tiles.maxBy { it.x }?.x ?: 0) + 1
+        val tilesHeight = (tiles.maxBy { it.y }?.y ?: 0) + 1
+        val startX = -tilesWidth / 2.0 + 0.5
+        val startY = -tilesHeight / 2.0 + 0.5
+
         root.children.remove(tilesModel)
         tilesModel = Group()
 
         tiles.forEach {
             val meshView = MeshView(mesh)
             meshView.transforms.add(Rotate(180.0, Rotate.Z_AXIS))
-            meshView.transforms.add(Translate(-it.x.toDouble(), 0.0, it.y.toDouble()))
+            meshView.transforms.add(Translate(-startX - it.x, 0.0, startY + it.y))
             meshView.material = material
             tilesModel.add(meshView)
         }
