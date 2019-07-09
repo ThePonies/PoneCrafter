@@ -10,7 +10,7 @@ import javafx.scene.image.ImageView
 import javafx.scene.layout.Priority
 import org.theponies.ponecrafter.Styles
 import org.theponies.ponecrafter.model.ImageData
-import org.theponies.ponecrafter.util.IntStringConverter
+import org.theponies.ponecrafter.util.NumberStringConverter
 import tornadofx.*
 
 abstract class BaseEditorView(val name: String) : View(name) {
@@ -32,7 +32,7 @@ abstract class BaseEditorView(val name: String) : View(name) {
 }
 
 fun EventTarget.numberField(property: Property<Number>, name: String = property.name) = field(name.capitalize()) {
-    textfield(property, IntStringConverter()) {
+    textfield(property, NumberStringConverter()) {
         filterInput {
             it.controlNewText.isInt()
         }

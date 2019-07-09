@@ -56,7 +56,7 @@ abstract class BaseEditorController<T : BaseModel> : Controller() {
             arrayOf(FileChooser.ExtensionFilter("OBJ model", "*.obj"))
         ).firstOrNull()
         if (meshFile != null) {
-            return MeshData(meshFile.inputStream().use { it.readBytes() })
+            return MeshData(meshFile.inputStream())
         }
         return null
     }

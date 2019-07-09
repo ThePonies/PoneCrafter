@@ -1,3 +1,7 @@
 package org.theponies.ponecrafter.model
 
-class MeshData(val data: ByteArray)
+import java.io.InputStream
+
+class MeshData(val data: ByteArray) {
+    constructor(inputStream: InputStream) : this(inputStream.use { it.readBytes() })
+}

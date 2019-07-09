@@ -12,7 +12,7 @@ import org.theponies.ponecrafter.component.ModelViewer
 import org.theponies.ponecrafter.controller.FurnitureEditorController
 import org.theponies.ponecrafter.model.CatalogCategory
 import org.theponies.ponecrafter.model.FurnitureModel
-import org.theponies.ponecrafter.util.IntStringConverter
+import org.theponies.ponecrafter.util.NumberStringConverter
 import org.theponies.ponecrafter.view.MenuView
 import tornadofx.*
 
@@ -111,10 +111,10 @@ class FurnitureEditorView : TabEditorView("Create an Object", Icons.objects) {
             }
         },
         "Model" to VBox().fieldset {
-            label("This will be the model tab")
             hbox {
                 vbox {
                     hgrow = Priority.ALWAYS
+                    spacing = 10.0
                     button("Load model") {
                         prefWidth = 160.0
                         action {
@@ -126,11 +126,17 @@ class FurnitureEditorView : TabEditorView("Create an Object", Icons.objects) {
                     model.addValidator(this, model.meshData) {
                         if (model.meshData.value != null) success() else error()
                     }
+                    button("Edit tiles") {
+                        prefWidth = 160.0
+                        action {
+                            TilesEditorView(model.occupiedTiles).openWindow(resizable = false)
+                        }
+                    }
                 }
                 vbox {
                     val modelViewer = ModelViewer(240, 240, model.meshData, model.texture, model.occupiedTiles) {
                         fill = Styles.textFieldColor
-                        rotateY(45)
+                        rotateY(-45)
                     }
                     add(modelViewer)
                     hbox {
@@ -180,7 +186,7 @@ class FurnitureEditorView : TabEditorView("Create an Object", Icons.objects) {
 
 fun EventTarget.statNumberField(property: Property<Number>, name: String = property.name) = field(name.capitalize()) {
     padding = insets(0)
-    textfield(property, IntStringConverter()) {
+    textfield(property, NumberStringConverter()) {
         padding = insets(2, 0)
         filterInput {
             it.controlNewText.length <= 2 && it.controlNewText.isInt() && it.controlNewText.toInt() in 0..10

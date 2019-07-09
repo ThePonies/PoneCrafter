@@ -45,13 +45,13 @@ class ModelViewer(
         observableMeshData.addListener { _, _, newValue -> if (newValue != null) loadModel(newValue) }
         observableTexture.addListener { _, _, newValue -> if (newValue != null) setTexture(newValue) }
         observableTiles.addListener(InvalidationListener { loadTiles(observableTiles) })
-        loadTiles(observableTiles)
         tilesModel = Group()
+        loadTiles(observableTiles)
         op()
     }
 
     fun rotateY(amount: Number) {
-        cameraYRotate.angle += amount.toDouble()
+        cameraYRotate.angle -= amount.toDouble()
     }
 
     private fun loadModel(meshData: MeshData): Boolean {
@@ -67,8 +67,8 @@ class ModelViewer(
         return false
     }
 
-    fun loadTiles(tiles: List<Vector2>) {
-        val meshData = MeshData(javaClass.getResourceAsStream("/models/tilemarker.obj").use { it.readBytes() })
+    private fun loadTiles(tiles: List<Vector2>) {
+        val meshData = MeshData(javaClass.getResourceAsStream("/models/tilemarker.obj"))
         val texture = Image(javaClass.getResourceAsStream("/models/tilemarker.png"))
         val mesh = ObjImporter().importMesh(meshData)
         val material = PhongMaterial()
@@ -80,13 +80,12 @@ class ModelViewer(
         tiles.forEach {
             val meshView = MeshView(mesh)
             meshView.transforms.add(Rotate(180.0, Rotate.Z_AXIS))
-            meshView.transforms.add(Translate(it.x.toDouble(), 0.0, it.y.toDouble()))
+            meshView.transforms.add(Translate(-it.x.toDouble(), 0.0, it.y.toDouble()))
             meshView.material = material
             tilesModel.add(meshView)
         }
 
         root.children.add(tilesModel)
-
     }
 
     private fun setTexture(imageData: ImageData) {

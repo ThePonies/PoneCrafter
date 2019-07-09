@@ -5,7 +5,7 @@ import javafx.scene.layout.Priority
 import org.theponies.ponecrafter.Icons
 import org.theponies.ponecrafter.controller.FloorEditorController
 import org.theponies.ponecrafter.model.FloorModel
-import org.theponies.ponecrafter.util.IntStringConverter
+import org.theponies.ponecrafter.util.NumberStringConverter
 import org.theponies.ponecrafter.util.UuidUtil
 import org.theponies.ponecrafter.view.MenuView
 import tornadofx.*
@@ -25,7 +25,7 @@ class FloorEditorView : BaseEditorView("Create a Floor") {
                 labelContainer.alignment = Pos.TOP_LEFT
             }
             field("Price") {
-                textfield(model.price, IntStringConverter()) {
+                textfield(model.price, NumberStringConverter()) {
                     filterInput { it.controlNewText.isInt() }
                     validator {
                         if (it.isNullOrBlank()) error("The price field is required") else null
