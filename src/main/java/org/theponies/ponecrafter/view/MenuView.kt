@@ -7,6 +7,7 @@ import javafx.scene.image.Image
 import org.theponies.ponecrafter.Icons
 import org.theponies.ponecrafter.Styles
 import org.theponies.ponecrafter.controller.LoadController
+import org.theponies.ponecrafter.model.BaseModel
 import org.theponies.ponecrafter.model.Floor
 import org.theponies.ponecrafter.model.Furniture
 import org.theponies.ponecrafter.model.Roof
@@ -52,17 +53,22 @@ class MenuView : View("PoneCrafter Menu") {
                 addClass(Styles.subtleText)
             }
         }
-        hbox {
+        hbox(10) {
             padding = insets(10)
             button("Load...") {
-                action {
-                    when (val model = LoadController().openLoadDialog()) {
-                        is Floor -> replaceWith(FloorEditorView(model))
-                        is Roof -> replaceWith(RoofEditorView(model))
-                        is Furniture -> replaceWith(FurnitureEditorView(model))
-                    }
-                }
+                action { openEditor(LoadController().loadFileDialog()) }
             }
+            button("Load raw...") {
+                action { openEditor(LoadController().loadDirectoryDialog()) }
+            }
+        }
+    }
+
+    private fun openEditor(model: BaseModel?) {
+        when (model) {
+            is Floor -> replaceWith(FloorEditorView(model))
+            is Roof -> replaceWith(RoofEditorView(model))
+            is Furniture -> replaceWith(FurnitureEditorView(model))
         }
     }
 
