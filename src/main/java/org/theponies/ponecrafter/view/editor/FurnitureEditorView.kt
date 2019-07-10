@@ -11,14 +11,15 @@ import org.theponies.ponecrafter.Styles
 import org.theponies.ponecrafter.component.ModelViewer
 import org.theponies.ponecrafter.controller.FurnitureEditorController
 import org.theponies.ponecrafter.model.CatalogCategory
+import org.theponies.ponecrafter.model.Furniture
 import org.theponies.ponecrafter.model.FurnitureModel
 import org.theponies.ponecrafter.util.NumberStringConverter
 import org.theponies.ponecrafter.view.MenuView
 import tornadofx.*
 
-class FurnitureEditorView : TabEditorView("Create an Object", Icons.objects) {
+class FurnitureEditorView(furniture: Furniture = Furniture()) : TabEditorView("Create an Object", Icons.objects) {
     private val controller: FurnitureEditorController by inject()
-    private val model: FurnitureModel = FurnitureModel()
+    private val model: FurnitureModel = FurnitureModel(furniture)
 
     override val root = createRoot()
 

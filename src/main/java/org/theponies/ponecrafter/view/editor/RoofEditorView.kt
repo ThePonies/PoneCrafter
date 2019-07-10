@@ -4,14 +4,15 @@ import javafx.geometry.Pos
 import javafx.scene.layout.Priority
 import org.theponies.ponecrafter.Icons
 import org.theponies.ponecrafter.controller.RoofEditorController
+import org.theponies.ponecrafter.model.Roof
 import org.theponies.ponecrafter.model.RoofModel
 import org.theponies.ponecrafter.util.UuidUtil
 import org.theponies.ponecrafter.view.MenuView
 import tornadofx.*
 
-class RoofEditorView : BaseEditorView("Create a Roof") {
+class RoofEditorView(roof: Roof = Roof()) : BaseEditorView("Create a Roof") {
     private val controller: RoofEditorController by inject()
-    private val model: RoofModel = RoofModel()
+    private val model: RoofModel = RoofModel(roof)
 
     override val root = form {
         padding = insets(20)

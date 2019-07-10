@@ -10,17 +10,19 @@ import java.util.zip.ZipEntry
 class FloorEditorController : BaseEditorController<Floor>() {
 
     override fun save(model: Floor, file: File) {
-        writeToZip(file) {
-            it.putNextEntry(ZipEntry("properties.json"))
-            it.write(model.toJSON().toString().toByteArray())
-            it.putNextEntry(ZipEntry("texture.png"))
-            it.write(model.image.data)
-            it.closeEntry()
+        writeToZip(file) { zip ->
+            zip.putNextEntry(ZipEntry("properties.json"))
+            zip.write(model.toJSON().toString().toByteArray())
+            model.image?.let {
+                zip.putNextEntry(ZipEntry("texture.png"))
+                zip.write(it.data)
+            }
+            zip.closeEntry()
         }
     }
 
     override fun saveRaw(model: Floor, path: Path) {
         Files.write(path.resolve("properties.json"), model.toJSON().toPrettyString().toByteArray())
-        Files.write(path.resolve("texture.png"), model.image.data)
+        model.image?.let { Files.write(path.resolve("texture.png"), it.data) }
     }
 }

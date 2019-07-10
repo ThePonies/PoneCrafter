@@ -4,6 +4,7 @@ import javafx.beans.property.*
 import javafx.collections.ObservableList
 import org.theponies.ponecrafter.util.UuidUtil
 import tornadofx.*
+import java.io.InputStream
 import java.util.*
 import javax.json.JsonNumber
 import javax.json.JsonObject
@@ -46,10 +47,10 @@ class Furniture(name: String = "", description: String = "", price: Int = 0) : B
     var requiredAge: Age by requiredAgeProperty
 
     val meshDataProperty = SimpleObjectProperty<MeshData>(this, "meshData", null)
-    var meshData: MeshData by meshDataProperty
+    var meshData: MeshData? by meshDataProperty
 
     val textureProperty = SimpleObjectProperty<ImageData>(this, "texture", null)
-    var texture: ImageData by textureProperty
+    var texture: ImageData? by textureProperty
 
     override fun getTypeName() = "furniture"
 
@@ -92,5 +93,12 @@ class Furniture(name: String = "", description: String = "", price: Int = 0) : B
             add("skillStats", skillStats)
             add("requiredAge", requiredAge.id)
         }
+    }
+
+    fun loadModel(json: JsonObject, textureInput: InputStream?, modelInput: InputStream?): Furniture {
+        updateModel(json)
+        texture = textureInput?.use { ImageData(it.readBytes()) }
+        meshData = modelInput?.use { MeshData(it.readBytes()) }
+        return this
     }
 }

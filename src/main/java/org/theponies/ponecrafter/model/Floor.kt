@@ -5,6 +5,7 @@ import javafx.beans.property.SimpleObjectProperty
 import javafx.beans.property.SimpleStringProperty
 import org.theponies.ponecrafter.util.UuidUtil
 import tornadofx.*
+import java.io.InputStream
 import java.util.*
 import javax.json.JsonObject
 
@@ -20,7 +21,7 @@ class Floor(name: String = "", description: String = "", price: Int = 0) : BaseM
     var price: Int by priceProperty
 
     val imageProperty = SimpleObjectProperty<ImageData>(this, "image", null)
-    var image: ImageData by imageProperty
+    var image: ImageData? by imageProperty
 
     val uuidProperty = SimpleObjectProperty<UUID>(this, "uuid", UuidUtil.generateContentUuid())
     var uuid: UUID by uuidProperty
@@ -46,5 +47,11 @@ class Floor(name: String = "", description: String = "", price: Int = 0) : BaseM
             add("description", description)
             add("price", price)
         }
+    }
+
+    fun loadModel(json: JsonObject, imageInput: InputStream?): Floor {
+        updateModel(json)
+        image = imageInput?.use { ImageData(it.readBytes()) }
+        return this
     }
 }

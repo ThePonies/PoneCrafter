@@ -4,15 +4,16 @@ import javafx.geometry.Pos
 import javafx.scene.layout.Priority
 import org.theponies.ponecrafter.Icons
 import org.theponies.ponecrafter.controller.FloorEditorController
+import org.theponies.ponecrafter.model.Floor
 import org.theponies.ponecrafter.model.FloorModel
 import org.theponies.ponecrafter.util.NumberStringConverter
 import org.theponies.ponecrafter.util.UuidUtil
 import org.theponies.ponecrafter.view.MenuView
 import tornadofx.*
 
-class FloorEditorView : BaseEditorView("Create a Floor") {
+class FloorEditorView(floor: Floor = Floor()) : BaseEditorView("Create a Floor") {
     private val controller: FloorEditorController by inject()
-    private val model: FloorModel = FloorModel()
+    private val model = FloorModel(floor)
 
     override val root = form {
         padding = insets(20)

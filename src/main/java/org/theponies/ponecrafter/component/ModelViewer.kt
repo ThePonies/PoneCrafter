@@ -42,10 +42,12 @@ class ModelViewer(
         camera.farClip = 500.0
         setCamera(camera)
         root.children.add(camera)
-        observableMeshData.addListener { _, _, newValue -> if (newValue != null) loadModel(newValue) }
-        observableTexture.addListener { _, _, newValue -> if (newValue != null) setTexture(newValue) }
+        observableMeshData.addListener { _, _, newValue -> newValue?.let { loadModel(it) } }
+        observableTexture.addListener { _, _, newValue -> newValue?.let { setTexture(it) } }
         observableTiles.addListener(InvalidationListener { loadTiles(observableTiles) })
         tilesModel = Group()
+        observableMeshData.value?.let { loadModel(it) }
+        observableTexture.value?.let { setTexture(it) }
         loadTiles(observableTiles)
         op()
     }

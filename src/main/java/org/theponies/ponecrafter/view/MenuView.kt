@@ -6,6 +6,10 @@ import javafx.scene.Parent
 import javafx.scene.image.Image
 import org.theponies.ponecrafter.Icons
 import org.theponies.ponecrafter.Styles
+import org.theponies.ponecrafter.controller.LoadController
+import org.theponies.ponecrafter.model.Floor
+import org.theponies.ponecrafter.model.Furniture
+import org.theponies.ponecrafter.model.Roof
 import org.theponies.ponecrafter.view.editor.FloorEditorView
 import org.theponies.ponecrafter.view.editor.FurnitureEditorView
 import org.theponies.ponecrafter.view.editor.RoofEditorView
@@ -32,20 +36,32 @@ class MenuView : View("PoneCrafter Menu") {
             padding = insets(40, 10)
             mainMenuButtonBox(this, "Wall Texture", Icons.wallpaper)
             mainMenuButtonBox(this, "Floor Texture", Icons.floor) {
-                replaceWith<FloorEditorView>()
+                replaceWith(FloorEditorView())
             }
             mainMenuButtonBox(this, "Roof Texture", Icons.roof) {
-                replaceWith<RoofEditorView>()
+                replaceWith(RoofEditorView())
             }
             mainMenuButtonBox(this, "Terrain Texture", Icons.terrain)
             mainMenuButtonBox(this, "Object", Icons.objects) {
-                replaceWith<FurnitureEditorView>()
+                replaceWith(FurnitureEditorView())
             }
         }
         hbox(0, Pos.CENTER) {
-            padding = insets(80)
+            padding = insets(60, 60, 10, 60)
             label("More text may or may not be added here") {
                 addClass(Styles.subtleText)
+            }
+        }
+        hbox {
+            padding = insets(10)
+            button("Load...") {
+                action {
+                    when (val model = LoadController().openLoadDialog()) {
+                        is Floor -> replaceWith(FloorEditorView(model))
+                        is Roof -> replaceWith(RoofEditorView(model))
+                        is Furniture -> replaceWith(FurnitureEditorView(model))
+                    }
+                }
             }
         }
     }
