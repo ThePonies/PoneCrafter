@@ -13,6 +13,7 @@ import org.theponies.ponecrafter.controller.FurnitureEditorController
 import org.theponies.ponecrafter.model.CatalogCategory
 import org.theponies.ponecrafter.model.Furniture
 import org.theponies.ponecrafter.model.FurnitureModel
+import org.theponies.ponecrafter.model.PlacementType
 import org.theponies.ponecrafter.util.NumberStringConverter
 import org.theponies.ponecrafter.view.MenuView
 import tornadofx.*
@@ -180,7 +181,11 @@ class FurnitureEditorView(furniture: Furniture = Furniture()) : TabEditorView("C
             }
         },
         "Settings" to VBox().fieldset {
-            label("This will be the settings tab")
+            field("Placement type") {
+                combobox(model.placementType, PlacementType.values().toList())
+            }
+            checkbox("Pickupable", model.pickupable)
+            checkbox("Sellable", model.sellable)
         }
     )
 }

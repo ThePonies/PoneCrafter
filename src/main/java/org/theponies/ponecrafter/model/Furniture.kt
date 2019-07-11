@@ -6,7 +6,6 @@ import org.theponies.ponecrafter.util.UuidUtil
 import tornadofx.*
 import java.io.InputStream
 import java.util.*
-import javax.json.JsonNumber
 import javax.json.JsonObject
 
 class Furniture(name: String = "", description: String = "", price: Int = 0) : BaseModel() {
@@ -26,6 +25,9 @@ class Furniture(name: String = "", description: String = "", price: Int = 0) : B
     val categoryProperty = SimpleObjectProperty<CatalogCategory>(this, "category", CatalogCategory.SEATING)
     var category: CatalogCategory by categoryProperty
 
+    val placementTypeProperty = SimpleObjectProperty<PlacementType>(this, "placementType", PlacementType.GROUND)
+    var placementType: PlacementType by placementTypeProperty
+
     val pickupableProperty = SimpleBooleanProperty(this, "pickupable", true)
     var pickupable: Boolean by pickupableProperty
 
@@ -34,10 +36,6 @@ class Furniture(name: String = "", description: String = "", price: Int = 0) : B
 
     val occupiedTilesProperty: SimpleListProperty<Vector2> = SimpleListProperty(this, "occupiedTiles", observableList(Vector2()))
     val occupiedTiles: ObservableList<Vector2> by occupiedTilesProperty
-
-    val placementRestrictionsProperty: SimpleListProperty<PlacementRestriction> =
-        SimpleListProperty(this, "placementRestrictions", observableList(PlacementRestriction.TERRAIN, PlacementRestriction.FLOOR))
-    val placementRestrictions: ObservableList<PlacementRestriction> by placementRestrictionsProperty
 
     val needStats = Needs()
 
@@ -63,14 +61,10 @@ class Furniture(name: String = "", description: String = "", price: Int = 0) : B
             description = string("description") ?: ""
             price = int("price") ?: 0
             category = CatalogCategory.getById(int("category") ?: 0)
+            placementType = PlacementType.getById(int("placementType") ?: 0)
             pickupable = bool("pickupable") ?: true
             sellable = bool("sellable") ?: true
             jsonArray("occupiedTiles")?.let { occupiedTiles.setAll(it.toModel()) }
-            jsonArray("placementRestrictions")?.let {
-                placementRestrictions.setAll(it.map { value ->
-                    PlacementRestriction.getById((value as? JsonNumber)?.intValue() ?: 0)
-                })
-            }
             jsonObject("needStats")?.let { needStats.updateModel(it) }
             jsonObject("skillStats")?.let { skillStats.updateModel(it) }
             requiredAge = Age.getById(int("requiredAge") ?: 0)
@@ -85,10 +79,10 @@ class Furniture(name: String = "", description: String = "", price: Int = 0) : B
             add("description", description)
             add("price", price)
             add("category", category.id)
+            add("placementType", placementType.id)
             add("pickupable", pickupable)
             add("sellable", sellable)
             add("occupiedTiles", occupiedTiles)
-            add("placementRestrictions", placementRestrictions.map { it.id })
             add("needStats", needStats)
             add("skillStats", skillStats)
             add("requiredAge", requiredAge.id)

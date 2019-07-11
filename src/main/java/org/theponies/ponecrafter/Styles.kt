@@ -65,6 +65,14 @@ class Styles : Stylesheet() {
         }
         checkBox {
             +standardText
+            box {
+                backgroundColor += textFieldColor
+            }
+            and(selected) {
+                mark {
+                    backgroundColor += textColor
+                }
+            }
         }
         comboBox {
             +roundCorners
