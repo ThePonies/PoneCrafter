@@ -3,6 +3,7 @@ package org.theponies.ponecrafter.cli
 import org.theponies.ponecrafter.controller.FloorEditorController
 import org.theponies.ponecrafter.controller.FurnitureEditorController
 import org.theponies.ponecrafter.controller.RoofEditorController
+import org.theponies.ponecrafter.controller.WallCoverEditorController
 import org.theponies.ponecrafter.model.*
 import java.io.IOException
 import java.nio.file.Files
@@ -11,6 +12,7 @@ import java.nio.file.Paths
 
 class CreateCommand(paramDescription: String, description: String) : Command(paramDescription, description) {
     private val typeMap = mapOf(
+        "wallcover" to ::createWallCover,
         "floor" to ::createFloor,
         "roof" to ::createRoof,
         "furniture" to ::createFurniture
@@ -19,6 +21,7 @@ class CreateCommand(paramDescription: String, description: String) : Command(par
     override fun execute(params: List<String>) {
         if (params.size != 2) {
             println("Usage: create <type> <output folder>")
+            return
         }
         val typeKey = params[0]
         val output = params[1]
@@ -46,6 +49,15 @@ class CreateCommand(paramDescription: String, description: String) : Command(par
         floor.description = "This is a new floor."
         floor.image = ImageData(readResource("/images/placeholders/floor.png"))
         controller.saveRaw(floor, outputPath)
+    }
+
+    private fun createWallCover(outputPath: Path) {
+        val controller = WallCoverEditorController()
+        val wallCover = WallCover()
+        wallCover.name = "New wall"
+        wallCover.description = "This is a new wall cover."
+        wallCover.image = ImageData(readResource("/images/placeholders/wall.png"))
+        controller.saveRaw(wallCover, outputPath)
     }
 
     private fun createRoof(outputPath: Path) {

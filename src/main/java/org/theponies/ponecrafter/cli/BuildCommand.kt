@@ -3,6 +3,7 @@ package org.theponies.ponecrafter.cli
 import org.theponies.ponecrafter.controller.FloorEditorController
 import org.theponies.ponecrafter.controller.FurnitureEditorController
 import org.theponies.ponecrafter.controller.RoofEditorController
+import org.theponies.ponecrafter.controller.WallCoverEditorController
 import org.theponies.ponecrafter.model.*
 import tornadofx.loadJsonObject
 import java.nio.file.Files
@@ -15,13 +16,15 @@ import javax.json.JsonString
 class BuildCommand(paramDescription: String, description: String) : Command(paramDescription, description) {
     private val typeMap = mapOf(
         "floor" to ::buildFloor,
+        "wallcover" to ::buildWallCover,
         "roof" to ::buildRoof,
         "furniture" to ::buildFurniture
     )
 
     override fun execute(params: List<String>) {
         if (params.size != 1 && params.size != 2) {
-            println("Usage: create <type> (<output file>)")
+            println("Usage: build <path> (<output file>)")
+            return
         }
         try {
             val inputPath = Paths.get(params[0])
@@ -63,6 +66,20 @@ class BuildCommand(paramDescription: String, description: String) : Command(para
             floor.updateModel(properties)
             floor.image = imageData
             controller.save(floor, outputFile.toFile())
+        } catch (e: NoSuchFileException) {
+            throw CliException("Missing file: ${e.message}")
+        }
+    }
+
+    private fun buildWallCover(inputPath: Path, outputFile: Path) {
+        val controller = WallCoverEditorController()
+        val wallCover = WallCover()
+        try {
+            val properties = loadJsonObject(inputPath.resolve("properties.json"))
+            val imageData = ImageData(Files.readAllBytes(inputPath.resolve("texture.png")))
+            wallCover.updateModel(properties)
+            wallCover.image = imageData
+            controller.save(wallCover, outputFile.toFile())
         } catch (e: NoSuchFileException) {
             throw CliException("Missing file: ${e.message}")
         }

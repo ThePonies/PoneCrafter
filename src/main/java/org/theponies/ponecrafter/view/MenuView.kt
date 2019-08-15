@@ -7,13 +7,11 @@ import javafx.scene.image.Image
 import org.theponies.ponecrafter.Icons
 import org.theponies.ponecrafter.Styles
 import org.theponies.ponecrafter.controller.LoadController
-import org.theponies.ponecrafter.model.BaseModel
-import org.theponies.ponecrafter.model.Floor
-import org.theponies.ponecrafter.model.Furniture
-import org.theponies.ponecrafter.model.Roof
+import org.theponies.ponecrafter.model.*
 import org.theponies.ponecrafter.view.editor.FloorEditorView
 import org.theponies.ponecrafter.view.editor.FurnitureEditorView
 import org.theponies.ponecrafter.view.editor.RoofEditorView
+import org.theponies.ponecrafter.view.editor.WallCoverEditorView
 import tornadofx.*
 
 class MenuView : View("PoneCrafter Menu") {
@@ -35,7 +33,9 @@ class MenuView : View("PoneCrafter Menu") {
         }
         hbox(30) {
             padding = insets(40, 10)
-            mainMenuButtonBox(this, "Wall Texture", Icons.wallpaper)
+            mainMenuButtonBox(this, "Wall Texture", Icons.wallpaper) {
+                replaceWith(WallCoverEditorView())
+            }
             mainMenuButtonBox(this, "Floor Texture", Icons.floor) {
                 replaceWith(FloorEditorView())
             }
@@ -67,6 +67,7 @@ class MenuView : View("PoneCrafter Menu") {
     private fun openEditor(model: BaseModel?) {
         when (model) {
             is Floor -> replaceWith(FloorEditorView(model))
+            is WallCover -> replaceWith(WallCoverEditorView(model))
             is Roof -> replaceWith(RoofEditorView(model))
             is Furniture -> replaceWith(FurnitureEditorView(model))
         }

@@ -2,10 +2,7 @@ package org.theponies.ponecrafter.controller
 
 import javafx.scene.control.Alert
 import javafx.stage.FileChooser
-import org.theponies.ponecrafter.model.BaseModel
-import org.theponies.ponecrafter.model.Floor
-import org.theponies.ponecrafter.model.Furniture
-import org.theponies.ponecrafter.model.Roof
+import org.theponies.ponecrafter.model.*
 import tornadofx.*
 import java.io.InputStream
 import java.nio.file.Paths
@@ -65,6 +62,7 @@ class LoadController {
 
         return when (type) {
             "floor" -> Floor().loadModel(json, readFile("texture.png"))
+            "wallcover" -> WallCover().loadModel(json, readFile("texture.png"))
             "roof" -> Roof().loadModel(json, readFile("texture.png"))
             "furniture" -> Furniture().loadModel(json, readFile("texture.png"), readFile("model.obj"))
             else -> {

@@ -26,14 +26,15 @@ abstract class BaseEditorController<T : BaseModel> : Controller() {
 
     abstract fun saveRaw(model: T, path: Path)
 
-    fun chooseTextureDialog(typeName: String, reformat: Boolean): ImageData? {
+    fun chooseTextureDialog(typeName: String, reformat: Boolean, reformatWidth: Number = 128,
+                            reformatHeight: Number = 128): ImageData? {
         val imageFile: File? = chooseFile(
             "Select $typeName texture...",
             arrayOf(FileChooser.ExtensionFilter("Image (png, jpeg, gif)", "*.png", "*.jpg", "*.jpeg", "*.gif"))
         ).firstOrNull()
         if (imageFile != null) {
             val image = if (reformat) {
-                Image(imageFile.toURI().toString(), 128.0, 128.0, false, true)
+                Image(imageFile.toURI().toString(), reformatWidth.toDouble(), reformatHeight.toDouble(), false, true)
             } else {
                 Image(imageFile.toURI().toString())
             }
