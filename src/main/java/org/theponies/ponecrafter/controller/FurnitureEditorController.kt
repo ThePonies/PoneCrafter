@@ -14,8 +14,7 @@ class FurnitureEditorController : BaseEditorController<Furniture>() {
             zip.putNextEntry(ZipEntry("properties.json"))
             zip.write(model.toJSON().toString().toByteArray())
             model.meshFiles.forEach {
-                val fileName = if (it.fileName.endsWith(".gltf")) "model.gltf" else it.fileName
-                zip.putNextEntry(ZipEntry(fileName))
+                zip.putNextEntry(ZipEntry(convertFileName(it.fileName)))
                 zip.write(it.data)
             }
             zip.closeEntry()
@@ -25,8 +24,13 @@ class FurnitureEditorController : BaseEditorController<Furniture>() {
     override fun saveRaw(model: Furniture, path: Path) {
         Files.write(path.resolve("properties.json"), model.toJSON().toPrettyString().toByteArray())
         model.meshFiles.forEach {
-            val fileName = if (it.fileName.endsWith(".gltf")) "model.gltf" else it.fileName
-            Files.write(path.resolve(fileName), it.data)
+            Files.write(path.resolve(convertFileName(it.fileName)), it.data)
         }
+    }
+
+    private fun convertFileName(fileName: String) = when {
+        fileName.endsWith(".gltf", true) -> "model.gltf"
+        fileName.endsWith(".glb", true) -> "model.glb"
+        else -> fileName
     }
 }

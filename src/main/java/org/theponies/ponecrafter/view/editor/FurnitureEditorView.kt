@@ -121,8 +121,8 @@ class FurnitureEditorView(furniture: Furniture = Furniture()) : TabEditorView("C
                             val meshFiles = chooseFile(
                                 "Add model file(s)...",
                                 arrayOf(
-                                    FileChooser.ExtensionFilter("GLTF and textures", "*.gltf", "*.bin", "*.png",
-                                        "*.jpg", "*.jpeg", "*.png"),
+                                    FileChooser.ExtensionFilter("GLTF and textures", "*.gltf", "*.glb", "*.bin",
+                                        "*.png", "*.jpg", "*.jpeg", "*.png"),
                                     FileChooser.ExtensionFilter("All files", "*")
                                 ),
                                 FileChooserMode.Multi
@@ -135,7 +135,9 @@ class FurnitureEditorView(furniture: Furniture = Furniture()) : TabEditorView("C
                             error("Add at least one model file.")
                         else if (model.meshFiles.distinctBy { it.fileName }.count() < model.meshFiles.count())
                             error("Model files list should not contain duplicate filenames.")
-                        else if (model.meshFiles.count { it.fileName.endsWith(".gltf") } != 1)
+                        else if (model.meshFiles.count {
+                                it.fileName.endsWith(".gltf", true) || it.fileName.endsWith(".glb", true)
+                            } != 1)
                             error("Furniture items should contain exactly one GLTF file.")
                         else
                             success()
