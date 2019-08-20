@@ -19,13 +19,13 @@ class Furniture(name: String = "", description: String = "", price: Int = 0) : B
     val priceProperty = SimpleIntegerProperty(this, "price", price)
     var price: Int by priceProperty
 
-    val uuidProperty = SimpleObjectProperty<UUID>(this, "uuid", UuidUtil.generateContentUuid())
+    val uuidProperty = SimpleObjectProperty(this, "uuid", UuidUtil.generateContentUuid())
     var uuid: UUID by uuidProperty
 
-    val categoryProperty = SimpleObjectProperty<CatalogCategory>(this, "category", CatalogCategory.SEATING)
+    val categoryProperty = SimpleObjectProperty(this, "category", CatalogCategory.SEATING)
     var category: CatalogCategory by categoryProperty
 
-    val placementTypeProperty = SimpleObjectProperty<PlacementType>(this, "placementType", PlacementType.GROUND)
+    val placementTypeProperty = SimpleObjectProperty(this, "placementType", PlacementType.GROUND)
     var placementType: PlacementType by placementTypeProperty
 
     val pickupableProperty = SimpleBooleanProperty(this, "pickupable", true)
@@ -41,14 +41,11 @@ class Furniture(name: String = "", description: String = "", price: Int = 0) : B
 
     val skillStats = Skills()
 
-    val requiredAgeProperty = SimpleObjectProperty<Age>(this, "requiredAge", Age.ANY)
+    val requiredAgeProperty = SimpleObjectProperty(this, "requiredAge", Age.ANY)
     var requiredAge: Age by requiredAgeProperty
 
-    val meshDataProperty = SimpleObjectProperty<MeshData>(this, "meshData", null)
-    var meshData: MeshData? by meshDataProperty
-
-    val textureProperty = SimpleObjectProperty<ImageData>(this, "texture", null)
-    var texture: ImageData? by textureProperty
+    val meshFilesProperty: SimpleListProperty<MeshFile> = SimpleListProperty(this, "meshFiles", observableList())
+    val meshFiles: ObservableList<MeshFile> by meshFilesProperty
 
     override fun getTypeName() = "furniture"
 
@@ -89,10 +86,9 @@ class Furniture(name: String = "", description: String = "", price: Int = 0) : B
         }
     }
 
-    fun loadModel(json: JsonObject, textureInput: InputStream?, modelInput: InputStream?): Furniture {
+    fun loadModel(json: JsonObject, fileList: List<String>, readFile: (name: String) -> InputStream?): Furniture {
         updateModel(json)
-        texture = textureInput?.use { ImageData(it.readBytes()) }
-        meshData = modelInput?.use { MeshData(it.readBytes()) }
+        meshFiles.setAll(fileList.map { MeshFile(it, readFile(it)!!.readBytes()) })
         return this
     }
 }

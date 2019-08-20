@@ -6,7 +6,6 @@ import javafx.scene.image.Image
 import javafx.stage.FileChooser
 import org.theponies.ponecrafter.model.BaseModel
 import org.theponies.ponecrafter.model.ImageData
-import org.theponies.ponecrafter.model.MeshData
 import tornadofx.Controller
 import tornadofx.FileChooserMode
 import tornadofx.alert
@@ -47,17 +46,6 @@ abstract class BaseEditorController<T : BaseModel> : Controller() {
             } else {
                 return ImageData(getImageBytes(image))
             }
-        }
-        return null
-    }
-
-    fun chooseMeshDialog(typeName: String): MeshData? {
-        val meshFile: File? = chooseFile(
-            "Select $typeName model...",
-            arrayOf(FileChooser.ExtensionFilter("OBJ model", "*.obj"))
-        ).firstOrNull()
-        if (meshFile != null) {
-            return MeshData(meshFile.inputStream())
         }
         return null
     }

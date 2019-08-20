@@ -1,9 +1,6 @@
 package org.theponies.ponecrafter.cli
 
-import org.theponies.ponecrafter.controller.FloorEditorController
-import org.theponies.ponecrafter.controller.FurnitureEditorController
-import org.theponies.ponecrafter.controller.RoofEditorController
-import org.theponies.ponecrafter.controller.WallCoverEditorController
+import org.theponies.ponecrafter.controller.*
 import org.theponies.ponecrafter.model.*
 import tornadofx.loadJsonObject
 import java.nio.file.Files
@@ -100,18 +97,13 @@ class BuildCommand(paramDescription: String, description: String) : Command(para
     }
 
     private fun buildFurniture(inputPath: Path, outputFile: Path) {
-        val controller = FurnitureEditorController()
-        val furniture = Furniture()
         try {
-            val properties = loadJsonObject(inputPath.resolve("properties.json"))
-            val meshData = MeshData(Files.readAllBytes(inputPath.resolve("model.obj")))
-            val textureData = ImageData(Files.readAllBytes(inputPath.resolve("texture.png")))
-            furniture.updateModel(properties)
-            furniture.meshData = meshData
-            furniture.texture = textureData
-            controller.save(furniture, outputFile.toFile())
+            val furniture = ModelLoader().loadFromFolder(inputPath.toFile()) as Furniture
+            FurnitureEditorController().save(furniture, outputFile.toFile())
         } catch (e: NoSuchFileException) {
             throw CliException("Missing file: ${e.message}")
+        } catch (e: ModelLoader.ModelLoadException) {
+            throw CliException("Failed to load: ${e.message}")
         }
     }
 

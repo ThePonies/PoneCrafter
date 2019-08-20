@@ -74,8 +74,9 @@ class CreateCommand(paramDescription: String, description: String) : Command(par
         val furniture = Furniture()
         furniture.name = "New object"
         furniture.description = "This is a new object."
-        furniture.meshData = MeshData(readResource("/images/placeholders/furniture.obj"))
-        furniture.texture = ImageData(readResource("/images/placeholders/furniture.png"))
+        // TODO: Add GLTF example files.
+        // furniture.meshData = BinaryData(readResource("/images/placeholders/furniture.obj"))
+        // furniture.texture = ImageData(readResource("/images/placeholders/furniture.png"))
         controller.saveRaw(furniture, outputPath)
     }
 

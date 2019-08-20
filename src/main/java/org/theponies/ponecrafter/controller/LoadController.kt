@@ -2,15 +2,13 @@ package org.theponies.ponecrafter.controller
 
 import javafx.scene.control.Alert
 import javafx.stage.FileChooser
-import org.theponies.ponecrafter.model.*
-import tornadofx.*
+import org.theponies.ponecrafter.model.BaseModel
+import tornadofx.alert
+import tornadofx.chooseDirectory
+import tornadofx.chooseFile
 import java.io.InputStream
-import java.nio.file.Paths
 import java.util.zip.ZipException
 import java.util.zip.ZipFile
-import javax.json.Json
-import javax.json.JsonException
-import javax.json.JsonObject
 
 class LoadController {
     fun loadFileDialog(): BaseModel? {
@@ -23,52 +21,26 @@ class LoadController {
         try {
             zipFile = ZipFile(file)
         } catch (e: ZipException) {
-            loadError("The selected file is not a PCC package.")
+            loadErrorAlert("The selected file is not a PCC package.")
             return null
         }
 
-        return createModel { getZipEntryStream(zipFile, it) }
+        val fileList = zipFile.entries().toList().map { it.name }
+        return try {
+            ModelLoader().createModel(fileList) { getZipEntryStream(zipFile, it) }
+        } catch (e: ModelLoader.ModelLoadException) {
+            loadErrorAlert(e.message.toString())
+            null
+        }
     }
 
     fun loadDirectoryDialog(): BaseModel? {
         val folder = chooseDirectory("Choose raw content folder...") ?: return null
-        return createModel {
-            val file = Paths.get(folder.absolutePath, it).toFile()
-            if (file.exists()) file.inputStream() else null
-        }
-    }
-
-    private fun createModel(readFile: (name: String) -> InputStream?): BaseModel? {
-        val propertiesInput = readFile("properties.json")
-        if (propertiesInput == null) {
-            loadError("The properties.json file is missing.")
-            return null
-        }
-
-        val type: String?
-        val json: JsonObject
-        try {
-            json = propertiesInput.use { Json.createReader(it).readObject() }
-            type = json.string("type")
-            if (type == null) {
-                loadError("Item type was not specified.")
-                return null
-            }
-
-        } catch (e: JsonException) {
-            loadError("Properties file contains invalid JSON.")
-            return null
-        }
-
-        return when (type) {
-            "floor" -> Floor().loadModel(json, readFile("texture.png"))
-            "wallcover" -> WallCover().loadModel(json, readFile("texture.png"))
-            "roof" -> Roof().loadModel(json, readFile("texture.png"))
-            "furniture" -> Furniture().loadModel(json, readFile("texture.png"), readFile("model.obj"))
-            else -> {
-                loadError("Unknown item type: $type")
-                return null
-            }
+        return try {
+            ModelLoader().loadFromFolder(folder)
+        } catch (e: ModelLoader.ModelLoadException) {
+            loadErrorAlert(e.message.toString())
+            null
         }
     }
 
@@ -77,7 +49,7 @@ class LoadController {
         return zipFile.getInputStream(entry)
     }
 
-    private fun loadError(message: String) {
+    private fun loadErrorAlert(message: String) {
         alert(
             Alert.AlertType.ERROR,
             "Failed to load item",
