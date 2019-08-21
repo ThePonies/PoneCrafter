@@ -4,16 +4,14 @@ import javafx.beans.property.Property
 import javafx.event.EventTarget
 import javafx.geometry.Pos
 import javafx.scene.Parent
+import javafx.scene.control.SelectionMode
 import javafx.scene.layout.Priority
 import javafx.scene.layout.VBox
+import javafx.stage.FileChooser
 import org.theponies.ponecrafter.Icons
 import org.theponies.ponecrafter.Styles
-import org.theponies.ponecrafter.component.ModelViewer
 import org.theponies.ponecrafter.controller.FurnitureEditorController
-import org.theponies.ponecrafter.model.CatalogCategory
-import org.theponies.ponecrafter.model.Furniture
-import org.theponies.ponecrafter.model.FurnitureModel
-import org.theponies.ponecrafter.model.PlacementType
+import org.theponies.ponecrafter.model.*
 import org.theponies.ponecrafter.util.NumberStringConverter
 import org.theponies.ponecrafter.view.MenuView
 import tornadofx.*
@@ -117,16 +115,32 @@ class FurnitureEditorView(furniture: Furniture = Furniture()) : TabEditorView("C
                 vbox {
                     hgrow = Priority.ALWAYS
                     spacing = 10.0
-                    button("Load model") {
+                    button("Add model files") {
                         prefWidth = 160.0
                         action {
-                            controller.chooseMeshDialog(model.item.getTypeName())?.let {
-                                model.meshData.value = it
-                            }
+                            val meshFiles = chooseFile(
+                                "Add model file(s)...",
+                                arrayOf(
+                                    FileChooser.ExtensionFilter("GLTF and textures", "*.gltf", "*.glb", "*.bin",
+                                        "*.png", "*.jpg", "*.jpeg", "*.png"),
+                                    FileChooser.ExtensionFilter("All files", "*")
+                                ),
+                                FileChooserMode.Multi
+                            )
+                            model.meshFiles.addAll(meshFiles.map { MeshFile(it) })
                         }
                     }
-                    model.addValidator(this, model.meshData) {
-                        if (model.meshData.value != null) success() else error()
+                    model.addValidator(this, model.meshFiles) {
+                        if (model.meshFiles.isEmpty())
+                            error("Add at least one model file.")
+                        else if (model.meshFiles.distinctBy { it.fileName }.count() < model.meshFiles.count())
+                            error("Model files list should not contain duplicate filenames.")
+                        else if (model.meshFiles.count {
+                                it.fileName.endsWith(".gltf", true) || it.fileName.endsWith(".glb", true)
+                            } != 1)
+                            error("Furniture items should contain exactly one GLTF file.")
+                        else
+                            success()
                     }
                     button("Edit tiles") {
                         prefWidth = 160.0
@@ -136,45 +150,13 @@ class FurnitureEditorView(furniture: Furniture = Furniture()) : TabEditorView("C
                     }
                 }
                 vbox {
-                    val modelViewer = ModelViewer(240, 240, model.meshData, model.texture, model.occupiedTiles) {
-                        fill = Styles.textFieldColor
-                        rotateY(-45)
+                    val fileList = listview(model.meshFiles) {
+                        selectionModel.selectionMode = SelectionMode.MULTIPLE
                     }
-                    add(modelViewer)
-                    hbox {
-                        alignment = Pos.CENTER
-                        padding = insets(10)
-                        button("<<") {
-                            spacing = 10.0
-                            action {
-                                modelViewer.rotateY(-90)
-                            }
-                        }
-                        button(">>") {
-                            spacing = 10.0
-                            action {
-                                modelViewer.rotateY(90)
-                            }
-                        }
-                    }
-                }
-            }
-            hbox {
-                vbox {
-                    hgrow = Priority.ALWAYS
-                    button("Load texture") {
-                        prefWidth = 160.0
+                    button("Remove") {
+                        enableWhen(fileList.selectionModel.selectedItemProperty().isNotNull)
                         action {
-                            controller.chooseTextureDialog(model.item.getTypeName(), false)?.let {
-                                model.texture.value = it
-                            }
-                        }
-                    }
-                }
-                vbox {
-                    imageDataView(model.texture, 128.0, 128.0) {
-                        model.addValidator(this, model.texture) {
-                            if (model.texture.value != null) success() else error()
+                            model.meshFiles.removeAll(fileList.selectionModel.selectedItems)
                         }
                     }
                 }

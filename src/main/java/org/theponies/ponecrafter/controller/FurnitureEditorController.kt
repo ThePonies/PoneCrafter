@@ -13,12 +13,8 @@ class FurnitureEditorController : BaseEditorController<Furniture>() {
         writeToZip(file) { zip ->
             zip.putNextEntry(ZipEntry("properties.json"))
             zip.write(model.toJSON().toString().toByteArray())
-            model.meshData?.let {
-                zip.putNextEntry(ZipEntry("model.obj"))
-                zip.write(it.data)
-            }
-            model.texture?.let {
-                zip.putNextEntry(ZipEntry("texture.png"))
+            model.meshFiles.forEach {
+                zip.putNextEntry(ZipEntry(convertFileName(it.fileName)))
                 zip.write(it.data)
             }
             zip.closeEntry()
@@ -27,7 +23,14 @@ class FurnitureEditorController : BaseEditorController<Furniture>() {
 
     override fun saveRaw(model: Furniture, path: Path) {
         Files.write(path.resolve("properties.json"), model.toJSON().toPrettyString().toByteArray())
-        model.meshData?.let { Files.write(path.resolve("model.obj"), it.data) }
-        model.texture?.let { Files.write(path.resolve("texture.png"), it.data) }
+        model.meshFiles.forEach {
+            Files.write(path.resolve(convertFileName(it.fileName)), it.data)
+        }
+    }
+
+    private fun convertFileName(fileName: String) = when {
+        fileName.endsWith(".gltf", true) -> "model.gltf"
+        fileName.endsWith(".glb", true) -> "model.glb"
+        else -> fileName
     }
 }

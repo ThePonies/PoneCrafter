@@ -1,5 +1,7 @@
 package org.theponies.ponecrafter.model
 
+import javafx.beans.property.SimpleListProperty
+import javafx.collections.ObservableList
 import tornadofx.ViewModel
 
 class FurnitureModel(val furniture: Furniture = Furniture()) : ViewModel() {
@@ -14,7 +16,7 @@ class FurnitureModel(val furniture: Furniture = Furniture()) : ViewModel() {
     val placementType = bind { furniture.placementTypeProperty }
     val pickupable = bind { furniture.pickupableProperty }
     val sellable = bind { furniture.sellableProperty }
-    val occupiedTiles = furniture.occupiedTilesProperty.value
+    val occupiedTiles: ObservableList<Vector2> = furniture.occupiedTilesProperty.value
     val requiredAge = bind { furniture.requiredAgeProperty }
 
     val hungerStat = bind { furniture.needStats.hungerProperty }
@@ -33,6 +35,5 @@ class FurnitureModel(val furniture: Furniture = Furniture()) : ViewModel() {
     val logicStat = bind { furniture.skillStats.logicProperty }
     val creativityStat = bind { furniture.skillStats.creativityProperty }
 
-    val meshData = bind { furniture.meshDataProperty }
-    val texture = bind { furniture.textureProperty }
+    val meshFiles: SimpleListProperty<MeshFile> = bind { furniture.meshFilesProperty }
 }
