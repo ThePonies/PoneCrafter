@@ -163,11 +163,49 @@ class FurnitureEditorView(furniture: Furniture = Furniture()) : TabEditorView("C
             }
         },
         "Settings" to VBox().fieldset {
-            field("Placement type") {
-                combobox(model.placementType, PlacementType.values().toList())
+            hbox {
+                vbox {
+                    hgrow = Priority.ALWAYS
+                    field("Placement type") {
+                        combobox(model.placementType, PlacementType.values().toList())
+                    }
+                    checkbox("Pickupable", model.pickupable)
+                    checkbox("Sellable", model.sellable)
+                }
+                vbox(10) {
+                    vgrow = Priority.ALWAYS
+                    label("Tags")
+                    val tagsView = tableview(model.tags) {
+                        column("Name", Tag::name).makeEditable()
+                        column("Value", Tag::value).makeEditable()
+                    }
+                    // TODO: Add validation on tag editing.
+                    /*model.addValidator(this, model.tags) {
+                        if (model.tags.distinctBy { it.name }.count() < model.tags.count())
+                            error("Tag names should be unique.")
+                        else
+                            success()
+                    }*/
+                    hbox {
+                        vbox {
+                            hgrow = Priority.ALWAYS
+                            button("Add") {
+                                action {
+                                    model.tags.add(Tag())
+                                }
+                            }
+                        }
+                        vbox(0, Pos.BOTTOM_RIGHT) {
+                            button("Remove") {
+                                enableWhen(tagsView.selectionModel.selectedItemProperty().isNotNull)
+                                action {
+                                    model.tags.removeAll(tagsView.selectionModel.selectedItems)
+                                }
+                            }
+                        }
+                    }
+                }
             }
-            checkbox("Pickupable", model.pickupable)
-            checkbox("Sellable", model.sellable)
         }
     )
 }

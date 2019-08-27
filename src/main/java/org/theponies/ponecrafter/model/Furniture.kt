@@ -44,6 +44,9 @@ class Furniture(name: String = "", description: String = "", price: Int = 0) : B
     val requiredAgeProperty = SimpleObjectProperty(this, "requiredAge", Age.ANY)
     var requiredAge: Age by requiredAgeProperty
 
+    val tagsProperty: SimpleListProperty<Tag> = SimpleListProperty(this, "tags", observableList())
+    val tags: ObservableList<Tag> by tagsProperty
+
     val meshFilesProperty: SimpleListProperty<MeshFile> = SimpleListProperty(this, "meshFiles", observableList())
     val meshFiles: ObservableList<MeshFile> by meshFilesProperty
 
@@ -65,6 +68,7 @@ class Furniture(name: String = "", description: String = "", price: Int = 0) : B
             jsonObject("needStats")?.let { needStats.updateModel(it) }
             jsonObject("skillStats")?.let { skillStats.updateModel(it) }
             requiredAge = Age.getById(int("requiredAge") ?: 0)
+            jsonArray("tags")?.let { tags.setAll(it.toModel()) }
         }
     }
 
@@ -83,6 +87,7 @@ class Furniture(name: String = "", description: String = "", price: Int = 0) : B
             add("needStats", needStats)
             add("skillStats", skillStats)
             add("requiredAge", requiredAge.id)
+            add("tags", tags)
         }
     }
 
