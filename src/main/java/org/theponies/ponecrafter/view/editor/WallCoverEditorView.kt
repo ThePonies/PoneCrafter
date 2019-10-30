@@ -54,7 +54,15 @@ class WallCoverEditorView(wallCover: WallCover = WallCover()) : BaseEditorView("
                     enableWhen(model.valid)
                     action {
                         if (model.commit()) {
-                            controller.saveDialog(model.item)
+                            controller.saveDialog(model.item, false)
+                        }
+                    }
+                }
+                button("Save raw") {
+                    enableWhen(model.valid)
+                    action {
+                        if (model.commit()) {
+                            controller.saveDialog(model.item, true)
                         }
                     }
                 }

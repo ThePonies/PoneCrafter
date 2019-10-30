@@ -45,7 +45,15 @@ class RoofEditorView(roof: Roof = Roof()) : BaseEditorView("Create a Roof") {
                     enableWhen(model.valid)
                     action {
                         if (model.commit()) {
-                            controller.saveDialog(model.item)
+                            controller.saveDialog(model.item, false)
+                        }
+                    }
+                }
+                button("Save raw") {
+                    enableWhen(model.valid)
+                    action {
+                        if (model.commit()) {
+                            controller.saveDialog(model.item, true)
                         }
                     }
                 }

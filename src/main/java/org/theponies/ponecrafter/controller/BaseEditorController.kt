@@ -50,23 +50,25 @@ abstract class BaseEditorController<T : BaseModel> : Controller() {
         return null
     }
 
-    fun saveDialog(model: T) {
-        val file = chooseFile(
-            "Save ${model.getTypeName()}...",
-            arrayOf(FileChooser.ExtensionFilter("PoneCrafter Content", "*.pcc"), FileChooser.ExtensionFilter("Raw content", "*")),
-            FileChooserMode.Save
-        ) {
+    fun saveDialog(model: T, isRaw: Boolean) {
+        val extensionFilter = if (isRaw)
+            FileChooser.ExtensionFilter ("Raw content", "*")
+        else
+            FileChooser.ExtensionFilter("PoneCrafter Content", "*.pcc")
+
+        val file = chooseFile("Save ${model.getTypeName()}...", arrayOf(extensionFilter), FileChooserMode.Save) {
             val regex = Regex("[^A-Za-z0-9 ]")
             val name = regex.replace(model.getModelName(), "").replace(" ", "-")
-            initialFileName = "$name.pcc"
+            initialFileName = if (isRaw) name else "$name.pcc"
         }.firstOrNull()
+
         if (file != null) {
-            val message = if (file.extension.isNotEmpty()) {
-                save(model, file)
-                "${model.getTypeName().capitalize()} saved to ${file.name}"
-            } else {
+            val message = if (isRaw) {
                 handleRawSave(file, model)
                 "Raw ${model.getTypeName()} saved to folder ${file.name}"
+            } else {
+                save(model, file)
+                "${model.getTypeName().capitalize()} saved to ${file.name}"
             }
             alert(AlertType.INFORMATION, "Success", message)
         }

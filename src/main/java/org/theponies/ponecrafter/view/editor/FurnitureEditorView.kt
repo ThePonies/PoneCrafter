@@ -34,11 +34,21 @@ class FurnitureEditorView(furniture: Furniture = Furniture()) : TabEditorView("C
                 }
             }
             vbox(0, Pos.BOTTOM_RIGHT) {
-                button("Save") {
-                    enableWhen(model.valid)
-                    action {
-                        if (model.commit()) {
-                            controller.saveDialog(model.item)
+                hbox(5) {
+                    button("Save") {
+                        enableWhen(model.valid)
+                        action {
+                            if (model.commit()) {
+                                controller.saveDialog(model.item, false)
+                            }
+                        }
+                    }
+                    button("Save raw") {
+                        enableWhen(model.valid)
+                        action {
+                            if (model.commit()) {
+                                controller.saveDialog(model.item, true)
+                            }
                         }
                     }
                 }
