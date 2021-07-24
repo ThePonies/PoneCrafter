@@ -1,6 +1,10 @@
-name: Java CI
+name: Build with Maven
 
-on: [push]
+on:
+  push:
+    branches:
+      - master
+      - test/deployment
 
 jobs:
   build:
@@ -15,3 +19,8 @@ jobs:
           distribution: 'adopt'
       - name: Build with Maven
         run: mvn --batch-mode --update-snapshots verify
+      - name: Upload artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: PoneCrafter
+          path: target/PoneCrafter.jar
