@@ -93,6 +93,7 @@ abstract class BaseEditorController<T : BaseModel> : Controller() {
     }
 
     private fun getImageBytes(image: Image): ByteArray {
+        // TODO: Replace SwingFXUtils.fromFXImage() so we can get rid of Swing.
         val bufferedImage = SwingFXUtils.fromFXImage(image, null)
         ByteArrayOutputStream().use { output ->
             ImageIO.write(bufferedImage, "png", output)
