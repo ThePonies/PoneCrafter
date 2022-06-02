@@ -3,7 +3,7 @@ name: Build with Maven
 on:
   push:
     branches:
-      - master
+      - temp-action
 
 jobs:
   build:
