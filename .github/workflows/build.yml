@@ -1,9 +1,10 @@
 name: Build with Maven
 
 on:
+  workflow_dispatch:
   push:
     branches:
-      - master
+      - temp-action
 
 jobs:
   build:
@@ -19,7 +20,7 @@ jobs:
       - name: Build with Maven
         run: mvn --batch-mode --update-snapshots verify
       - name: Upload artifact
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v4
         with:
           name: PoneCrafter
           path: target/PoneCrafter.jar
